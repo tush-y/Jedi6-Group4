@@ -10,9 +10,6 @@ import java.util.ArrayList;
 public class CRSApplication {
 
     public static void main(String[] args) {
-
-//        CRSApplication application = new CRSApplication();
-//        application.mainMenu();
         mainMenu();
     }
 
@@ -49,13 +46,25 @@ public class CRSApplication {
         int flag=0;
         for(User i: list)
         {
-            if(i.getId() == id && i.getPassword() == password) {
+            if(i.getId().equals(id) && i.getPassword().equals(password)) {
                 System.out.println("Login Success");
+                if(i.getRole()==Role.ADMIN)
+                {
+                    //Call adminCRS menu
+                }
+                else if(i.getRole()==Role.STUDENT)
+                {
+                    StudentCRSMenu.menu(i);
+                }
+                else if(i.getRole()==Role.PROF)
+                {
+                    //Call ProfCRS menu
+                }
                 flag=1;
                 break;
             }
         }
-        if(flag!=0) {
+        if(flag==0) {
             System.out.println("Login failed. Enter Again.");
             mainMenu();
         }
@@ -67,14 +76,14 @@ public class CRSApplication {
         int flag=0;
         for(User i: list)
         {
-            if(i.getId() == id && i.getPassword() == oldPassword) {
+            if(i.getId().equals(id) && i.getPassword().equals(oldPassword)) {
                 String newPassword = Helper.scanString("New Password");
                 i.setPassword(newPassword);
                 flag=1;
                 break;
             }
         }
-        if(flag!=0) {
+        if(flag==0) {
             System.out.println("User Not Found");
             mainMenu();
         }

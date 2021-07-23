@@ -15,12 +15,7 @@ public class StudentOperation implements StudentOperationInterface {
     }
 
     @Override
-    public void register(Student student) {
-
-    }
-
-    @Override
-    public void login(String id, String password) {
+    public void register(String studentId) {
 
     }
 
