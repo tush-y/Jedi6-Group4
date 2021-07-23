@@ -12,4 +12,7 @@ public class Admin extends User {
             setRole(role);
     }
 
+    public Admin(String id , String name , String password , Role role){
+        super(id , name , password , role);
+    }
 }

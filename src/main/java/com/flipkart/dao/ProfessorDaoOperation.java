@@ -11,29 +11,21 @@ import java.util.ArrayList;
 
 public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
+    private final Connection conn;
+    public ProfessorDaoOperation(){
+        conn = DBConnector.getInstance();
+    }
 
     @Override
     public ArrayList<Course> getCourseByProf(String profId) {
 
-        Connection conn = DBConnector.gtInstance();
         ArrayList<Course> result = new ArrayList<>();
         try{
-            PreparedStatement stmt = conn.prepareStatement(String.format("Select * from instructor where profId = %s" , profId));
-            ResultSet rs = stmt.executeQuery();
-            ArrayList<String> tmp = new ArrayList<>();
-            while(rs.next()){
-
-                String code = rs.getString("course_code");
-                tmp.add(code);
-            }
-            String sql = "Select * from course_catalog where course code in (";
-            for (String code : tmp){
-                sql += tmp;
-                sql += ",";
-            }
-            sql += ")";
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM instructor;");
+            String sql = "SELECT * FROM course_catalog WHERE course_code in (select course_code from instructor where profId = ?)";
             stmt = conn.prepareStatement(sql);
-            rs = stmt.executeQuery();
+            stmt.setString(1 , profId);
+            ResultSet rs = stmt.executeQuery();
 
             while(rs.next()){
 
@@ -61,5 +53,55 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
     @Override
     public void addGrades(String studentId, String courseCode, String grade) {
 
+    }
+
+    @Override
+    public void chooseCourse(String profId , String courseCode) {
+
+        Connection conn = DBConnector.getInstance();
+        if( checkIfSignedUp(profId , courseCode)){
+            System.out.println("Already Signed up for this course");
+            return ;
+        }
+
+        final String sql = "INSERT INTO instructor values (? , ?)";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1 , profId);
+            stmt.setString(2 , courseCode);
+            stmt.executeQuery();
+            System.out.println("Course added successfully .");
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkIfSignedUp(String profId , String courseCode){
+
+        final String sql = "SELECT * from instructor where profId = ? and course_code = ?";
+
+        try{
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1 , profId);
+            stmt.setString(2 , courseCode);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next();
+        }
+        catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return false;
+
+    }
+
+    public static void main(String[] args) {
+
+        ProfessorDaoOperation operation = new ProfessorDaoOperation();
+//        ArrayList<Course>  courses = operation.getCourseByProf("Prof001");
+//        System.out.println(courses);
+
+        System.out.println(operation.checkIfSignedUp("Prof001" , "CS004"));
     }
 }

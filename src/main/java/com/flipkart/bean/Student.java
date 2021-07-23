@@ -1,5 +1,8 @@
 package com.flipkart.bean;
 
+
+import com.flipkart.constant.Role;
+
 import java.util.ArrayList;
 
 public class Student extends User {
@@ -7,10 +10,14 @@ public class Student extends User {
     private String branch;
     private ArrayList<Course> courses;
 
-    public Student(String name){
 
-        setName(name);
+    public Student(){
+
     }
+
+    public Student(String id , String name , String password , Role role){
+        super(id , name , password , role);
+
 
     public String getBranch() {
         return branch;
