@@ -22,7 +22,6 @@ public class ProfessorOperation implements ProfessorOperationInterface {
     public void chooseCourse(String courseCode) {
         CourseCatalog catalog = CourseCatalog.getInstance();
         Course course = catalog.getCourse(courseCode);
-        System.out.println("Printing Course Value : " + course.toString());
         if (course!=null)
             professor.setCourses(course);
         else System.out.println(String.format("Course code %s not valid" , courseCode));

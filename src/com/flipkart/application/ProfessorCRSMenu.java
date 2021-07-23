@@ -15,6 +15,7 @@ public class ProfessorCRSMenu {
         ArrayList<String> list = new ArrayList<>(Arrays.asList("Add Grades" , "Choose Course" , "View Enrolled Student" , "View Courses"  , "List All courses" , "Exit"));
 
         int count = 1;
+        System.out.println("============= Select from the below ===============");
         for(String value : list){
             System.out.println("*************  " + count + ". " + value + "  ****************");
             ++count;

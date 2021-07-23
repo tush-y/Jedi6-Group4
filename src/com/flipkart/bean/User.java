@@ -1,12 +1,14 @@
 package com.flipkart.bean;
 
+import com.flipkart.constant.Role;
+
 abstract public class User {
 
     private String id;
     private String name;
     private String password;
     private Address address;
-
+    private Role role;
     public String getId() {
         return id;
     }

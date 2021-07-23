@@ -13,6 +13,7 @@ public class CRSApplication {
     public void mainMenu(){
 
         System.out.println("*********** Welcome to CRS! ************");
+        System.out.println("*********** Choose your Role ************");
         System.out.println("*********** 1. Admin ********************");
         System.out.println("*********** 2. Student ******************");
         System.out.println("*********** 3. Professor ****************");
