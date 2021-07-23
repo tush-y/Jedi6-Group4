@@ -1,5 +1,9 @@
 package com.flipkart.application;
 
+import com.flipkart.bean.Course;
+import com.flipkart.bean.Student;
+import com.flipkart.bean.User;
+import com.flipkart.business.StudentOperation;
 import com.flipkart.input.Helper;
 
 import java.util.ArrayList;
@@ -8,9 +12,10 @@ import java.util.Scanner;
 
 public class StudentCRSMenu {
 
-    public static void menu(){
-        ArrayList<String> list = new ArrayList<>(Arrays.asList("View Enrolled Course" , "Add Course" , "Drop Course" , "View Grade Card"));
+    public static void menu(User student){
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("View Enrolled Course" , "Add Course" , "Drop Course" , "Register" ,"View Grade Card"));
         int count = 1;
+        StudentOperation studentOperation = new StudentOperation();
         for(String value : list){
             System.out.println(count + ". " + value);
             ++count;
@@ -20,54 +25,35 @@ public class StudentCRSMenu {
 
         if(value==null || value > 4){
             System.out.println("Invalid Option");
-            menu();
+            menu(student);
         }
         else if(value == 1){
-            System.out.println("View Enrolled Course called");
+                studentOperation.viewEnrolledCourses(student.getId());
         }
         else if(value==2){
-            System.out.println("Add course Called");
+            String courseCode = Helper.scanString("Course Code");
+            studentOperation.addCourse(student.getId(),courseCode);
         }
         else if(value==3){
-            System.out.println("Drop course Called");
+            String courseCode = Helper.scanString("Course Code");
+            studentOperation.dropCourse(courseCode);
         }
         else if(value==4){
-            System.out.println("View Grade Card Called");
+            studentOperation.register(student.getId());
         }
-
-    }
-    public static void loginMenu(){
-
-        while(true){
-            System.out.println("1. Login");
-            System.out.println("2. Signup");
-
-            Integer value = Helper.scanInt();
-            if(value==null || value > 2){
-                System.out.println("Invalid Option");
-                continue;
-            }
-            if(value==1){
-                menu();
-                return ;
-            }
-            if(value==2) {
-                registerMenu();
-                return;
-            }
-
+        else if(value==5){
+            studentOperation.viewGradeCard(student.getId());
         }
     }
-    public static void registerMenu(){
 
-        String name = Helper.scanString("Name");
-        String id = Helper.scanString("id");
-        String password = Helper.scanString("Password");
-        String branch = Helper.scanString("Branch");
-
-        System.out.println("Registered");
-
-        menu();
-
+    public static void signUpMenu(ArrayList<User> list){
+        Student student = new Student(null);
+        student.setName(Helper.scanString("Name"));
+        student.setId(Helper.scanString("id"));
+        student.setPassword(Helper.scanString("Password"));
+        student.setBranch(Helper.scanString("Branch"));
+        System.out.println("Student Registered successfully");
+        list.add(student);
+        menu(student);
     }
 }

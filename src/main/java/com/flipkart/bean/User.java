@@ -37,6 +37,8 @@ abstract public class User {
         return address;
     }
 
+    public Role getRole() { return role; }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -52,6 +54,8 @@ abstract public class User {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    public void setRole(Role role) { this.role = role; }
 
     @Override
     public String toString() {

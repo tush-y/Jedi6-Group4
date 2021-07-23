@@ -1,21 +1,23 @@
 package com.flipkart.application;
 
 import com.flipkart.bean.Admin;
+
 import com.flipkart.bean.Professor;
 import com.flipkart.bean.Student;
 import com.flipkart.bean.User;
+import com.flipkart.constant.Role;
 import com.flipkart.input.Helper;
 import com.flipkart.validator.Authentication;
+
+import java.util.ArrayList;
 
 public class CRSApplication {
 
     public static void main(String[] args) {
-
-        CRSApplication application = new CRSApplication();
-        application.mainMenu();
+        mainMenu();
     }
 
-    public void mainMenu(){
+    public static void mainMenu(){
 
         System.out.println("*********** Welcome to CRS! ************");
         System.out.println("*********** Select an Option ************");
