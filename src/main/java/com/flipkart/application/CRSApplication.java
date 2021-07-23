@@ -1,22 +1,32 @@
 package com.flipkart.application;
 
+import com.flipkart.bean.Admin;
+import com.flipkart.bean.User;
+import com.flipkart.constant.Role;
 import com.flipkart.input.Helper;
+
+import java.util.ArrayList;
 
 public class CRSApplication {
 
     public static void main(String[] args) {
 
-        CRSApplication application = new CRSApplication();
-        application.mainMenu();
+//        CRSApplication application = new CRSApplication();
+//        application.mainMenu();
+        mainMenu();
     }
 
-    public void mainMenu(){
+    public static void mainMenu(){
 
         System.out.println("*********** Welcome to CRS! ************");
-        System.out.println("*********** Choose your Role ************");
-        System.out.println("*********** 1. Admin ********************");
-        System.out.println("*********** 2. Student ******************");
-        System.out.println("*********** 3. Professor ****************");
+        System.out.println("*********** Choose any option************");
+        System.out.println("*********** 1. Login ********************");
+        System.out.println("*********** 2. Student Sign Up ******************");
+        System.out.println("*********** 3. Update Password ****************");
+        System.out.println("*********** 4. Exit ****************");
+
+        ArrayList<User> list = new ArrayList<>();
+        list.add(new Admin("001","admin","pass",null,Role.ADMIN));
 
         Integer value = Helper.scanInt();
         if(value==null){
@@ -24,11 +34,50 @@ public class CRSApplication {
             mainMenu();
         }
         else if(value==1)
-            AdminCRSMenu.login();
+            login(list);
         else if(value==2)
-            StudentCRSMenu.loginMenu();
+            StudentCRSMenu.signUpMenu(list);
         else if(value==3)
-            ProfessorCRSMenu.login();
+            updatePassword(list);
+        else if(value==4)
+            System.exit(0);
+    }
+
+    public static void login(ArrayList<User> list) {
+        String id = Helper.scanString("id");
+        String password = Helper.scanString("Password");
+        int flag=0;
+        for(User i: list)
+        {
+            if(i.getId() == id && i.getPassword() == password) {
+                System.out.println("Login Success");
+                flag=1;
+                break;
+            }
+        }
+        if(flag!=0) {
+            System.out.println("Login failed. Enter Again.");
+            mainMenu();
+        }
+    }
+
+    public static void updatePassword(ArrayList<User> list) {
+        String id = Helper.scanString("id");
+        String oldPassword = Helper.scanString("Old Password");
+        int flag=0;
+        for(User i: list)
+        {
+            if(i.getId() == id && i.getPassword() == oldPassword) {
+                String newPassword = Helper.scanString("New Password");
+                i.setPassword(newPassword);
+                flag=1;
+                break;
+            }
+        }
+        if(flag!=0) {
+            System.out.println("User Not Found");
+            mainMenu();
+        }
     }
 
 }
