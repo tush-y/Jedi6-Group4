@@ -4,8 +4,8 @@ public class Student extends User {
 
     private String branch;
 
-    Student(){
-
+    public Student(String name){
+        setName(name);
     }
 
     public String getBranch() {
