@@ -21,10 +21,9 @@ public class DBConnector {
         }
     }
 
-    public static Connection gtInstance(){
+    public static Connection getInstance(){
 
-        if (instance == null)
-            new DBConnector();
+        new DBConnector();
         return instance;
     }
 }

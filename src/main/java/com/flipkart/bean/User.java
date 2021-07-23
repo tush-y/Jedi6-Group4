@@ -9,6 +9,18 @@ abstract public class User {
     private String password;
     private Address address;
     private Role role;
+
+    public User(){
+
+    }
+
+    public User(String id, String name, String password, Role role) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.role = role;
+    }
+
     public String getId() {
         return id;
     }

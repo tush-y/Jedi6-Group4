@@ -1,5 +1,7 @@
 package com.flipkart.bean;
 
+import com.flipkart.constant.Role;
+
 import java.util.ArrayList;
 
 public class Professor extends User {
@@ -12,6 +14,9 @@ public class Professor extends User {
         department = "CS";
         designation = "Assistant Professor";
         courses = new ArrayList<>();
+    }
+    public Professor(String id , String name , String password , Role role){
+        super(id , name , password , role);
     }
     public String getDepartment() {
         return department;
