@@ -15,11 +15,10 @@ public class Student extends User {
 
     }
 
-    public Student(String id , String name , String password , Role role){
-        super(id , name , password , role);
-
-
-    public String getBranch() {
+    public Student(String id , String name , String password , Role role) {
+        super(id, name, password, role);
+    }
+    public String getBranch(){
         return branch;
     }
 

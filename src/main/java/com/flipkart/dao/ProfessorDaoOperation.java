@@ -1,6 +1,5 @@
 package com.flipkart.dao;
 
-import com.apple.eawt.event.SwipeListener;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Student;
 import java.sql.Connection;

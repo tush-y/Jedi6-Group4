@@ -47,7 +47,7 @@ public class StudentCRSMenu {
     }
 
     public static void signUpMenu(ArrayList<User> list){
-        Student student = new Student(null);
+        Student student = new Student();
         student.setName(Helper.scanString("Name"));
         student.setId(Helper.scanString("id"));
         student.setPassword(Helper.scanString("Password"));
