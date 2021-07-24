@@ -47,6 +47,7 @@ public class CRSApplication {
                 professorCRSMenu.menu();
             }
             else if(user instanceof Student) {
+                System.out.println("student logged in");
 //                StudentCRSMenu.menu();
             }
             mainMenu();

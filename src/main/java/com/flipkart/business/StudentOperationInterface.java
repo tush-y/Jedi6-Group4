@@ -7,6 +7,6 @@ public interface StudentOperationInterface {
     void viewEnrolledCourses(String studentId);
     void addCourse(String studentId , String courseCode);
     void register(String studentId);
-    void dropCourse(String courseCode);
+    void dropCourse(String studentId,String courseCode);
     void viewGradeCard(String studentId);
 }
