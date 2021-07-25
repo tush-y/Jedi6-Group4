@@ -2,6 +2,7 @@ package com.flipkart.application;
 
 import com.flipkart.bean.Professor;
 import com.flipkart.business.ProfessorOperation;
+import com.flipkart.exceptions.CourseAlreadyRegisteredException;
 import com.flipkart.input.Helper;
 import com.flipkart.validator.Authentication;
 import org.apache.log4j.Logger;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 
 public class ProfessorCRSMenu {
 
-    private ProfessorOperation professorOperation;
+    private final ProfessorOperation professorOperation;
     private Professor professor;
     public ProfessorCRSMenu(Professor professor){
         this.professor = professor;
@@ -42,10 +43,15 @@ public class ProfessorCRSMenu {
         }
         else if(value==2){
             String  courseCode = Helper.scanString("courseCode");
-            professorOperation.chooseCourse(courseCode);
+            try {
+                professorOperation.chooseCourse(courseCode);
+            } catch (CourseAlreadyRegisteredException ex){
+                logger.warn(ex.getMessage());
+            }
         }
         else if(value==3){
             System.out.println("View Enrolled Student Called");
+
         }
         else if(value==4){
             professorOperation.viewCourses();

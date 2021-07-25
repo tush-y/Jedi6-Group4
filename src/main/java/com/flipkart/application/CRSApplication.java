@@ -8,17 +8,22 @@ import com.flipkart.bean.User;
 import com.flipkart.constant.Role;
 import com.flipkart.input.Helper;
 import com.flipkart.validator.Authentication;
+import com.mysql.cj.log.Log;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class CRSApplication {
 
     public static void main(String[] args) {
+        Logger logger = Logger.getLogger(CRSApplication.class);
+        logger.info("Application Started");
         mainMenu();
     }
 
     public static void mainMenu(){
 
+        Logger logger = Logger.getLogger(CRSApplication.class);
         System.out.println("*********** Welcome to CRS! ************");
         System.out.println("*********** Select an Option ************");
         System.out.println("*********** 1. Login ********************");
@@ -49,7 +54,6 @@ public class CRSApplication {
             else if(user instanceof Student) {
 //                StudentCRSMenu.menu();
             }
-            mainMenu();
 
         }
         else if(value==2){
@@ -61,7 +65,18 @@ public class CRSApplication {
 
         }
         else if(value==3){
-            // Update password will go here
+            String userId = Helper.scanString("id");
+            String oldPass = Helper.scanString("Old Password");
+            String newPass = Helper.scanString("New Password");
+            String newPass2 = Helper.scanString("New Password Again");
+            if(!newPass.equals(newPass2)){
+                logger.warn("New Passwords don't match .");
+            }
+
+            User user = new Authentication().login(userId , oldPass);
+            if(user == null){
+                logger.warn("Wrong userId or Password");
+            }
         }
 
         else if(value==4){

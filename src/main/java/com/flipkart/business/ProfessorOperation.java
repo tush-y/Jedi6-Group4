@@ -6,6 +6,7 @@ import com.flipkart.bean.Professor;
 import com.flipkart.constant.Grade;
 import com.flipkart.dao.CatalogDaoOperation;
 import com.flipkart.dao.ProfessorDaoOperation;
+import com.flipkart.exceptions.CourseAlreadyRegisteredException;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class ProfessorOperation implements ProfessorOperationInterface {
     }
 
     @Override
-    public void chooseCourse(String courseCode) {
+    public void chooseCourse(String courseCode) throws CourseAlreadyRegisteredException {
 
         ProfessorDaoOperation operation = new ProfessorDaoOperation();
         operation.chooseCourse(professor.getId() , courseCode);
@@ -29,6 +30,8 @@ public class ProfessorOperation implements ProfessorOperationInterface {
 
     @Override
     public void viewEnrolledStudent(String courseCode) {
+
+        ProfessorDaoOperation operation = new ProfessorDaoOperation();
 
     }
 

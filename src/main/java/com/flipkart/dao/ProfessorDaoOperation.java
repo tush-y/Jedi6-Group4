@@ -2,6 +2,9 @@ package com.flipkart.dao;
 
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Student;
+import com.flipkart.exceptions.CourseAlreadyRegisteredException;
+import com.flipkart.exceptions.GradesAlreadyGivenException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,9 +23,8 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
         ArrayList<Course> result = new ArrayList<>();
         try{
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM instructor;");
             String sql = "SELECT * FROM course_catalog WHERE course_code in (select course_code from instructor where profId = ?)";
-            stmt = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , profId);
             ResultSet rs = stmt.executeQuery();
 
@@ -45,23 +47,27 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
     }
 
     @Override
-    public ArrayList<Student> getEnrolledStudents(String profId) {
-        return null;
-    }
-
-    @Override
-    public void addGrades(String studentId, String courseCode, String grade) {
-
-    }
-
-    @Override
-    public void chooseCourse(String profId , String courseCode) {
+    public ArrayList<Student> getEnrolledStudents(String courseCode) {
 
         Connection conn = DBConnector.getInstance();
-        if( checkIfSignedUp(profId , courseCode)){
-            System.out.println("Already Signed up for this course");
-            return ;
+
+    }
+
+    @Override
+    public void addGrades(String studentId, String courseCode, String grade) throws GradesAlreadyGivenException {
+
+        if (checkIfGradesAlreadyGiven(studentId , courseCode)){
+            throw new GradesAlreadyGivenException(studentId);
         }
+
+    }
+
+    @Override
+    public void chooseCourse(String profId , String courseCode) throws CourseAlreadyRegisteredException {
+
+        Connection conn = DBConnector.getInstance();
+        if( checkIfSignedUp(profId , courseCode))
+            throw new CourseAlreadyRegisteredException(courseCode);
 
         final String sql = "INSERT INTO instructor values (? , ?)";
         try {
@@ -93,6 +99,26 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         }
         return false;
 
+    }
+
+    private boolean checkIfGradesAlreadyGiven(String studentId , String courseCode){
+
+        Connection conn = DBConnector.getInstance();
+
+        try{
+            final String sql = "SELECT * grades where studentId = ? and courseCode = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1 , studentId);
+            stmt.setString(2 , courseCode);
+
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return true;
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     public static void main(String[] args) {
