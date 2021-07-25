@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+
 public class DBConnector {
 
     private static Connection instance;
@@ -11,7 +12,7 @@ public class DBConnector {
     private DBConnector(){
 
         try{
-            instance = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/crs?user=root&password=root1234");
+            instance = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs" , "root", "Jediproject@44");
             System.out.println("Connected!");
 
         }
