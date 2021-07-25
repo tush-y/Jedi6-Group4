@@ -1,6 +1,5 @@
 package com.flipkart.dao;
 
-import com.flipkart.bean.Course;
 import com.flipkart.bean.StudentGrade;
 import com.flipkart.constant.SQLqueries;
 import com.flipkart.input.Helper;
@@ -24,14 +23,13 @@ public class StudentDaoOperation implements StudentDaoInterface {
     public void viewEnrolledCourses(String studentId)
     {
         try{
-            stmt = conn.prepareStatement("SELECT * FROM instructor;");
-            String sql = "SELECT * FROM course_catalog WHERE course_code in (select course_code from students where student_id = ?)";
+            String sql = "SELECT * FROM courseCatalog WHERE courseCode in (select courseCode from registeredCourse where studentid = ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1 , studentId);
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()){
-                String course_name = rs.getString("course_name");
+                String course_name = rs.getString("courseCode");
                 System.out.println(course_name);
             }
 
@@ -56,7 +54,8 @@ public class StudentDaoOperation implements StudentDaoInterface {
             stmt = conn.prepareStatement(SQLqueries.NUMBER_OF_REGISTERED_COURSES);
             stmt.setString(1, courseCode);
             ResultSet rs = stmt.executeQuery();
-            if (rs.getInt("count(studentId)") < 6) {
+            rs.next();
+            if (rs.getInt("cnt") < 6) {
                 stmt = conn.prepareStatement(SQLqueries.ADD_COURSE);
                 stmt.setString(1, studentId);
                 stmt.setString(2, courseCode);
@@ -75,11 +74,11 @@ public class StudentDaoOperation implements StudentDaoInterface {
         {
             logger.info(e.getMessage());
         }
-        finally
-        {
-            stmt.close();
-            conn.close();
-        }
+//        finally
+//        {
+//            stmt.close();
+//            conn.close();
+//        }
     }
 
     /**
@@ -96,7 +95,8 @@ public class StudentDaoOperation implements StudentDaoInterface {
             stmt = conn.prepareStatement(SQLqueries.NUMBER_OF_REGISTERED_COURSES);
             stmt.setString(1, courseCode);
             ResultSet rs = stmt.executeQuery();
-            if (rs.getInt("count(studentId)") > 4) {
+            rs.next();
+            if (rs.getInt("cnt") > 4) {
                 stmt = conn.prepareStatement(SQLqueries.DROP_COURSE_QUERY);
                 stmt.setString(1, courseCode);
                 stmt.setString(2, studentId);
@@ -107,18 +107,18 @@ public class StudentDaoOperation implements StudentDaoInterface {
                 stmt.execute();
             }
             else {
-                logger.warn("Can't register less than 4 courses. Add the course first.");
+                logger.warn("Can't Drop . Number of courses can't be less than 4 .");
             }
         }
         catch(Exception e)
         {
             logger.info(e.getMessage());
         }
-        finally
-        {
-            stmt.close();
-            conn.close();
-        }
+//        finally
+//        {
+//            stmt.close();
+//            conn.close();
+//        }
     }
 
     /**
@@ -161,11 +161,11 @@ public class StudentDaoOperation implements StudentDaoInterface {
         {
             logger.info(e.getMessage());
         }
-        finally
-        {
-            stmt.close();
-            conn.close();
-        }
+//        finally
+//        {
+//            stmt.close();
+//            conn.close();
+//        }
         return gradeCard;
     }
 
@@ -174,7 +174,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
         Connection conn = DBConnector.getInstance();
 
         try{
-            String sql = "select * from students where student_id = ?";
+            String sql = "select * from student where studentid = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1 , studentId);
             ResultSet rs = stmt.executeQuery();
@@ -201,7 +201,8 @@ public class StudentDaoOperation implements StudentDaoInterface {
                     default: System.out.println("invalid input. Enter Again.");
                                 payFees(studentId);
                 }
-                sql = "update students set fees_paid = 'Yes'  where student_id=?";
+//                sql = "update student set fees_paid = 'Yes'  where studentid=?";
+                sql = "Select * from student";
                 stmt = conn.prepareStatement(sql);
                 stmt.setString(1 , studentId);
                 stmt.executeUpdate();

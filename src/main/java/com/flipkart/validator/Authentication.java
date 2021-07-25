@@ -10,6 +10,7 @@ import com.flipkart.exceptions.InvalidCredentialsException;
 import com.flipkart.exceptions.UserNotApprovedException;
 import com.flipkart.exceptions.UserNotFoundException;
 import com.flipkart.session.Session;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,16 +22,18 @@ public class Authentication {
     public User login(String username , String password) throws UserNotApprovedException , InvalidCredentialsException {
 
         Connection conn = DBConnector.getInstance();
-
-        final String sql = "SELECT * from users join professor on profId = users.user_id join student on studentID = user_id where user_id = ? and password = ?";
+        Logger logger = Logger.getLogger(Authentication.class);
+        final String sql = "SELECT * from users left join professor on profId = users.userId left join student on studentID = userId where userId = ? and password = ?";
         try{
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , username);
             stmt.setString(2 , password);
             ResultSet rs = stmt.executeQuery();
+            logger.trace(rs);
             if(rs.next()){
 
                 String role = rs.getString("role");
+                logger.trace(role);
                 switch (role) {
                     case "Professor":
                         Professor professor = new Professor();

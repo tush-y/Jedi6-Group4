@@ -25,7 +25,7 @@ public class StudentCRSMenu {
         studentOperation = new StudentOperation(student);
     }
 
-    public void menu() throws SQLException {
+    public void menu() {
 
         Logger logger = Logger.getLogger(StudentCRSMenu.class);
         ArrayList<String> list = new ArrayList<>(Arrays.asList("View Enrolled Course" , "Add Course" , "Drop Course" , "Register" ,"View Grade Card","Pay Fees","Log Out"));
@@ -58,6 +58,7 @@ public class StudentCRSMenu {
         }
 
         else if(value==5){
+
             studentOperation.viewGradeCard();
         }
         else if(value==6){

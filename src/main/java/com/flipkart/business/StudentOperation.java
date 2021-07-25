@@ -8,6 +8,7 @@ import com.flipkart.dao.StudentDaoOperation;
 import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentOperation implements StudentOperationInterface {
@@ -25,9 +26,13 @@ public class StudentOperation implements StudentOperationInterface {
     }
 
     @Override
-    public void addCourse(String courseCode) throws SQLException {
+    public void addCourse(String courseCode) {
         StudentDaoOperation operation=new StudentDaoOperation();
-        operation.addCourse(student.getId() , courseCode);
+        try {
+            operation.addCourse(student.getId() , courseCode);
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -35,22 +40,33 @@ public class StudentOperation implements StudentOperationInterface {
     }
 
     @Override
-    public void dropCourse(String courseCode) throws SQLException {
+    public void dropCourse(String courseCode) {
         StudentDaoOperation operation=new StudentDaoOperation();
-        operation.dropCourse(student.getId() , courseCode);
+
+        try {
+            operation.dropCourse(student.getId() , courseCode);
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
     @Override
-    public void viewGradeCard() throws SQLException {
+    public void viewGradeCard() {
         StudentDaoOperation operation=new StudentDaoOperation();
-        List<StudentGrade> gradeCard = operation.viewGradeCard(student.getId());
-        logger.info(String.format("%-10s %-10s","COURSE CODE", "GRADE"));
+        List<StudentGrade> gradeCard = new ArrayList<>();
+
+        try {
+            gradeCard = operation.viewGradeCard(student.getId());
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
 
         if(gradeCard.isEmpty())
         {
             logger.info("You haven't registered for any course");
             return;
         }
+        logger.info(String.format("%-10s %-10s","COURSE CODE", "GRADE"));
 
         for(StudentGrade obj : gradeCard)
         {

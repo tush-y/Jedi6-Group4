@@ -15,7 +15,7 @@ public class CatalogDaoOperation implements CatalogDaoInterface{
         Connection conn = DBConnector.getInstance();
         ArrayList<Course> result = new ArrayList<>();
         try {
-            final String sql = "SELECT * FROM course_catalog";
+            final String sql = "SELECT * FROM courseCatalog";
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){

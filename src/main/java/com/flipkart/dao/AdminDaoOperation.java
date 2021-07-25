@@ -4,9 +4,6 @@ import java.sql.*;
 
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
-import com.flipkart.bean.Student;
-import com.flipkart.bean.User;
-import com.flipkart.constant.Role;
 
 
 public class AdminDaoOperation implements AdminDaoInterface {
@@ -22,7 +19,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
     {
         try
          {
-             String sql="insert into course_catalog(course_code, course_name, description, seats) values (?, ?, ?, ?)";
+             String sql="insert into courseCatalog(courseCode, courseName, description, seats) values (?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, course.getCourseCode());
@@ -46,7 +43,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
     {
         try
         {
-            String sql="delete from course_catalog where course_code = ?";
+            String sql="delete from courseCatalog where courseCode = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, courseCode);
@@ -74,7 +71,7 @@ public class AdminDaoOperation implements AdminDaoInterface {
             System.out.println(row_prof+" Professor Added in Professor");
 
             //insertion in user table
-            String sql_user="insert into users(user_id, name,password, role) values (?, ?, ?, ?)";
+            String sql_user="insert into users(userId, name,password, role) values (?, ?, ?, ?)";
             PreparedStatement stmt_user = conn.prepareStatement(sql_user);
             stmt_user.setString(1, professor.getId());
             stmt_user.setString(2, professor.getName());
