@@ -39,6 +39,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
     {
         Connection conn = DBConnector.getInstance();
 
+
         final String sql = "INSERT INTO students values (? , ? ,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -89,6 +90,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
                 System.out.println("2. Netbanking");
                 System.out.println("3. UPI");
                 Integer i = Helper.scanInt();
+                String str[]={"Debit / Credit Card","Netbanking","UPI"};
                 switch(i) {
                     case 1:  String cardNumber = Helper.scanString("Card Number");
                              String pin = Helper.scanString("PIN");
@@ -106,6 +108,8 @@ public class StudentDaoOperation implements StudentDaoInterface {
                 stmt = conn.prepareStatement(sql);
                 stmt.setString(1 , studentId);
                 stmt.executeUpdate();
+                NotificationDaoOperation notificationDaoOperation=new NotificationDaoOperation();
+                notificationDaoOperation.sendNotification(studentId,str[i]);
             }
         }
         catch (SQLException ex){
