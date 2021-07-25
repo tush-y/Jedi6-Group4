@@ -4,9 +4,10 @@ import com.flipkart.bean.Student;
 
 public interface StudentOperationInterface {
 
-    void viewEnrolledCourses(String studentId);
-    void addCourse(String studentId , String courseCode);
-    void register(String studentId);
-    void dropCourse(String studentId,String courseCode);
-    void viewGradeCard(String studentId);
+    void viewEnrolledCourses();
+    void addCourse(String courseCode);
+    void register();
+    void dropCourse(String courseCode);
+    void viewGradeCard();
+    void payFees();
 }

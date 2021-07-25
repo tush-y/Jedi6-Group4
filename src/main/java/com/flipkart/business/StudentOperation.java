@@ -10,36 +10,37 @@ public class StudentOperation implements StudentOperationInterface {
     public StudentOperation(Student student){
         this.student = student;
     }
+
     @Override
-    public void viewEnrolledCourses(String studentId) {
+    public void viewEnrolledCourses() {
         StudentDaoOperation operation=new StudentDaoOperation();
-        operation.viewEnrolledCourses(studentId);
-
-
+        operation.viewEnrolledCourses(student.getId());
     }
 
-
     @Override
-    public void addCourse(String studentId, String courseCode) {
+    public void addCourse(String courseCode) {
         StudentDaoOperation operation=new StudentDaoOperation();
-        operation.dropCourse(studentId , courseCode);
-
+        operation.dropCourse(student.getId() , courseCode);
     }
 
     @Override
-    public void register(String studentId) {
-
+    public void register() {
     }
+
     @Override
-    public void dropCourse(String studentId, String courseCode) {
+    public void dropCourse(String courseCode) {
         StudentDaoOperation operation=new StudentDaoOperation();
-        operation.dropCourse(studentId , courseCode);
+        operation.dropCourse(student.getId() , courseCode);
+    }
 
+    @Override
+    public void viewGradeCard() {
 
     }
 
     @Override
-    public void viewGradeCard(String studentId) {
-
+    public void payFees() {
+        StudentDaoOperation operation=new StudentDaoOperation();
+        operation.payFees(student.getId());
     }
 }
