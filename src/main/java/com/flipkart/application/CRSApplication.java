@@ -17,7 +17,7 @@ public class CRSApplication {
         mainMenu();
     }
 
-    public static void mainMenu(){
+    public static void mainMenu() {
 
         System.out.println("*********** Welcome to CRS! ************");
         System.out.println("*********** Select an Option ************");
@@ -27,46 +27,37 @@ public class CRSApplication {
         System.out.println("*********** 4. Exit *******************");
 
         Integer value = Helper.scanInt();
-        if(value==null || value > 4){
+        if (value == null || value > 4) {
             System.out.println("Invalid Option");
             mainMenu();
-        }
-        else if(value==1){
+        } else if (value == 1) {
 
             String id = Helper.scanString("id");
             String password = Helper.scanString("Password");
-            User user = new Authentication().login(id , password);
-            if(user == null){
+            User user = new Authentication().login(id, password);
+            if (user == null) {
                 System.out.println("Wrong username or password");
-            }
-            else if(user instanceof Admin){
+            } else if (user instanceof Admin) {
                 AdminCRSMenu.menu();
-            }
-            else if(user instanceof Professor){
-                ProfessorCRSMenu professorCRSMenu = new ProfessorCRSMenu((Professor)user);
+            } else if (user instanceof Professor) {
+                ProfessorCRSMenu professorCRSMenu = new ProfessorCRSMenu((Professor) user);
                 professorCRSMenu.menu();
-            }
-            else if(user instanceof Student) {
-//                StudentCRSMenu.menu();
+            } else if (user instanceof Student) {
+                //     StudentCRSMenu.menu();
             }
             mainMenu();
 
-        }
-        else if(value==2){
+        } else if (value == 2) {
 
             String name = Helper.scanString("Name");
             String id = Helper.scanString("id");
             String password = Helper.scanString("Password");
             String branch = Helper.scanString("Branch");
 
-        }
-        else if(value==3){
+        } else if (value == 3) {
             // Update password will go here
-        }
-
-        else if(value==4){
+        } else if (value == 4) {
             System.exit(0);
         }
     }
-
 }

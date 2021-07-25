@@ -2,8 +2,8 @@ package com.flipkart.bean;
 
 public class Course {
 
-    private String courseCode;
-    private String courseName;
+    private String courseCode="NA";
+    private String courseName="NA";
     private String description = "NA";
     private int seats = 10;
 
