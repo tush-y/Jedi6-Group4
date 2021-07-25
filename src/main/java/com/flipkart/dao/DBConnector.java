@@ -11,7 +11,7 @@ public class DBConnector {
     private DBConnector(){
 
         try{
-            instance = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/crs?user=brijesh1in");
+            instance = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/crs?user=root&password=root1234");
             System.out.println("Connected!");
 
         }
