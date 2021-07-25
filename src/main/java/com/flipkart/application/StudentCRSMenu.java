@@ -6,22 +6,28 @@ import com.flipkart.bean.Student;
 import com.flipkart.bean.User;
 import com.flipkart.business.ProfessorOperation;
 import com.flipkart.business.StudentOperation;
+import com.flipkart.business.StudentOperationInterface;
 import com.flipkart.input.Helper;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class StudentCRSMenu {
+
     private StudentOperation studentOperation;
     private Student student;
+
     public StudentCRSMenu(Student student){
         this.student = student;
         studentOperation = new StudentOperation(student);
-
     }
+
     public void menu(){
-        ArrayList<String> list = new ArrayList<>(Arrays.asList("View Enrolled Course" , "Add Course" , "Drop Course" , "Register" ,"View Grade Card"));
+
+        Logger logger = Logger.getLogger(StudentCRSMenu.class);
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("View Enrolled Course" , "Add Course" , "Drop Course" , "Register" ,"View Grade Card","Pay Fees","Log Out"));
         int count = 1;
         System.out.println("============= Select from the below ===============");
         for(String value : list){
@@ -31,42 +37,36 @@ public class StudentCRSMenu {
 
         Integer value = Helper.scanInt();
 
-        if(value==null || value > 6){
-            System.out.println("Invalid Option");
+        if(value==null || value > 7){
+            logger.info("Invalid Option");
             menu();
         }
         else if(value == 1){
             System.out.println("View Enrolled Course Called");
-            String  studentId = Helper.scanString("studentId");
-            studentOperation.viewEnrolledCourses(studentId);
-
+            studentOperation.viewEnrolledCourses();
         }
         else if(value==2){
             System.out.println("Add Course Called");
-            String  studentId = Helper.scanString("studentId");
             String  courseCode = Helper.scanString("courseCode");
-            studentOperation.addCourse(studentId,courseCode);
-
-
-
+            studentOperation.addCourse(courseCode);
         }
         else if(value==3){
             System.out.println("Drop Course Called");
-            String  studentId = Helper.scanString("studentId");
             String  courseCode = Helper.scanString("courseCode");
-            studentOperation.dropCourse(studentId,courseCode);
-
+            studentOperation.dropCourse(courseCode);
         }
         else if(value==4){
             System.out.println("Register Courses");
-
         }
 
         else if(value==5){
             System.out.println("View Grade Card");
         }
         else if(value==6){
-            System.out.println("Logged Out Successfully");
+            studentOperation.payFees();
+        }
+        else if(value==7){
+            logger.info("Logged Out Successfully");
             return;
         }
         menu();
