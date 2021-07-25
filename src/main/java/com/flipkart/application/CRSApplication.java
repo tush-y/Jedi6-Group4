@@ -43,7 +43,8 @@ public class CRSApplication {
                 ProfessorCRSMenu professorCRSMenu = new ProfessorCRSMenu((Professor) user);
                 professorCRSMenu.menu();
             } else if (user instanceof Student) {
-                //     StudentCRSMenu.menu();
+                StudentCRSMenu studentCRSMenu = new StudentCRSMenu((Student) user);
+                studentCRSMenu.menu();
             }
             mainMenu();
 
