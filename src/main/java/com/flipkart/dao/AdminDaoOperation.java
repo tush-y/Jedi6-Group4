@@ -64,14 +64,14 @@ public class AdminDaoOperation implements AdminDaoInterface {
         try
         {
             //insertion in instructor table
-            String sql_prof="insert into instructor(profId, profDesignation,profDep) values (?, ?, ?)";
+            String sql_prof="insert into professor(profId, profDesignation,profDep) values (?, ?, ?)";
             PreparedStatement stmt_prof = conn.prepareStatement(sql_prof);
             stmt_prof.setString(1, professor.getId());
             stmt_prof.setString(2, professor.getDesignation());
             stmt_prof.setString(3, professor.getDepartment());
             int row_prof= stmt_prof.executeUpdate();
 
-            System.out.println(row_prof+" Professor Added in Instructor");
+            System.out.println(row_prof+" Professor Added in Professor");
 
             //insertion in user table
             String sql_user="insert into users(user_id, name,password, role) values (?, ?, ?, ?)";
@@ -91,7 +91,28 @@ public class AdminDaoOperation implements AdminDaoInterface {
          }
     }
     public void approveStudent(String id)
-    {}
+    {
+        try
+        {
+            String sql="update student set isApproved = true where studentID = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            stmt.setString(1, id);
+            int row = stmt.executeUpdate();
+            if(row==0)
+            {
+                System.out.println("Student with provided student id doesn't exist");
+            }
+            else
+            {
+                System.out.println("Student with student id: " + id + " is approved");
+            }
+        }
+        catch(SQLException ex)
+        {
+            ex.printStackTrace();
+        }
+    }
 
 }
 

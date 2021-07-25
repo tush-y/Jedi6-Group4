@@ -7,7 +7,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
+import com.flipkart.bean.Student;
+import com.flipkart.constant.*;
+import com.flipkart.input.Helper;
 import java.util.*;
+
 public class AdminCRSMenu {
 
     public static void menu(){
@@ -28,16 +32,15 @@ public class AdminCRSMenu {
         else if(value == 1){
             System.out.println("------------ADD COURSE CALLED------------");
             Course course=new Course();
-            Scanner sc=new Scanner(System.in);
-            System.out.println("Enter the course code:->");
-            String course_code=sc.nextLine();
+
+
+            String course_code=Helper.scanString(" the course code:->");
             course.setCourseCode(course_code);
-            System.out.println("Enter the course name:->");
-            String course_name=sc.nextLine();
+            String course_name=Helper.scanString(" the course name:->");
             course.setCourseName(course_name);
-            System.out.println("Enter the course description:->");
-            String description=sc.nextLine();
+            String description=Helper.scanString(" the course description:->");
             course.setDescription(description);
+            Scanner sc=new Scanner(System.in);
             System.out.println("Enter the seats:->");
             int seats=sc.nextInt();
             course.setSeats(seats);
@@ -48,9 +51,7 @@ public class AdminCRSMenu {
         else if(value==2){
             System.out.println("------------REMOVE COURSE CALLED------------");
 
-            Scanner sc=new Scanner(System.in);
-            System.out.println("Enter the course code:->");
-            String course_code=sc.nextLine();
+            String course_code=Helper.scanString(" the course code");
             AdminOperation operation=new AdminOperation();
             operation.removeCourse(course_code);
         }
@@ -58,24 +59,23 @@ public class AdminCRSMenu {
         {
             System.out.println("------------ADD PROFESSOR CALLED------------");
             Professor professor=new Professor();
-            Scanner sc=new Scanner(System.in);
-            System.out.println("Enter the professor Id:->");
-            String professor_id=sc.nextLine();
+            String professor_id=Helper.scanString(" the Professor_id:->");
             professor.setId(professor_id);
-            System.out.println("Enter the professor Name:->");
-            String professor_name=sc.nextLine();
+            String professor_name=Helper.scanString("the professor Name:->");
             professor.setName(professor_name);
-            System.out.println("Enter the professor designation:->");
-            String professor_designation=sc.nextLine();
+            String professor_designation=Helper.scanString("the professor designation:->");
             professor.setDesignation(professor_designation);
-            System.out.println("Enter the professor department:->");
-            String professor_department=sc.nextLine();
+            String professor_department=Helper.scanString("he professor department:->");
             professor.setDepartment(professor_department);
             AdminOperation operation=new AdminOperation();
             operation.addProfessor(professor);
         }
         else if(value==4){
             System.out.println("------------APPROVE STUDENT CALLED------------");
+
+            String student_id=Helper.scanString(" the student Id");
+            AdminOperation operation=new AdminOperation();
+            operation.approveStudent(student_id);
         }
         System.out.println("Enter Y to continue , else press any other key");
         Scanner sc=new Scanner(System.in);

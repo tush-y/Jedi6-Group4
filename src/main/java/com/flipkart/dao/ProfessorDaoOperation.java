@@ -50,7 +50,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
     public ArrayList<Student> getEnrolledStudents(String courseCode) {
 
         Connection conn = DBConnector.getInstance();
-
+        return null;
     }
 
     @Override
