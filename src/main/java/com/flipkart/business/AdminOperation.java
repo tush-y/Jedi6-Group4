@@ -22,7 +22,8 @@ public class AdminOperation implements AdminOperationInterface {
 
     public void approveStudent(String id)
     {
-
+        AdminDaoOperation operation=new AdminDaoOperation();
+        operation.approveStudent(id);
     }
     public void addProfessor(Professor professor)
     {
