@@ -20,7 +20,7 @@ public class StudentOperation implements StudentOperationInterface {
     @Override
     public void addCourse(String courseCode) {
         StudentDaoOperation operation=new StudentDaoOperation();
-        operation.dropCourse(student.getId() , courseCode);
+        operation.addCourse(student.getId() , courseCode);
     }
 
     @Override

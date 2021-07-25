@@ -39,12 +39,13 @@ public class StudentDaoOperation implements StudentDaoInterface {
     {
         Connection conn = DBConnector.getInstance();
 
-        final String sql = "INSERT INTO students values (? , ?)";
+        final String sql = "INSERT INTO students values (? , ? ,?)";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , studentId);
             stmt.setString(2 , courseCode);
-            stmt.executeQuery();
+            stmt.setString(3 , "No");
+            stmt.executeUpdate();
             System.out.println("Successfully Assigned.");
         }
         catch (SQLException e){
@@ -61,7 +62,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , studentId);
             stmt.setString(2 , courseCode);
-            stmt.executeQuery();
+            stmt.executeUpdate();
             System.out.println("Deleted.");
         }
         catch (SQLException e){
@@ -109,6 +110,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
         }
         catch (SQLException ex){
             ex.printStackTrace();
+
         }
     }
 
