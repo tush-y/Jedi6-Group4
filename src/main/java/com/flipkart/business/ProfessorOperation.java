@@ -7,17 +7,22 @@ import com.flipkart.constant.Grade;
 import com.flipkart.dao.CatalogDaoOperation;
 import com.flipkart.dao.ProfessorDaoOperation;
 import com.flipkart.exceptions.CourseAlreadyRegisteredException;
+import com.flipkart.exceptions.CourseNotTaughtException;
+import com.mysql.cj.log.Log;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class ProfessorOperation implements ProfessorOperationInterface {
 
     Professor professor;
+    private Logger logger = Logger.getLogger(ProfessorOperation.class);
     public ProfessorOperation(Professor professor){
         this.professor = professor;
     }
     @Override
     public void addGrades(String studentId, Grade value) {
+
 
     }
 
@@ -32,27 +37,37 @@ public class ProfessorOperation implements ProfessorOperationInterface {
     public void viewEnrolledStudent(String courseCode) {
 
         ProfessorDaoOperation operation = new ProfessorDaoOperation();
-
+        try {
+            ArrayList<ArrayList<String>> data = operation.getEnrolledStudents(professor.getId() , courseCode);
+            logger.trace("============================================================");
+            for(ArrayList<String> info : data){
+                logger.info(info);
+            }
+            logger.trace("============================================================");
+        }
+        catch (CourseNotTaughtException ex){
+            logger.info(ex.getMessage());
+        }
     }
 
     @Override
     public void viewCourses() {
 
         ArrayList<Course> enrolledCourses = new ProfessorDaoOperation().getCourseByProf(professor.getId());
-        System.out.println("============================================================");
+        logger.trace("============================================================");
         for(Course course : enrolledCourses){
-            System.out.println(course.toString());
+            logger.info(course.toString());
         }
-        System.out.println("============================================================");
+        logger.trace("============================================================");
 
     }
     public void showAllCourses(){
 
         ArrayList<Course> allCourses = new CatalogDaoOperation().getAllCourses();
-        System.out.println("============================================================");
+        logger.trace("============================================================");
         for(Course course : allCourses){
-            System.out.println(course.toString());
+            logger.info(course.toString());
         }
-        System.out.println("============================================================");
+        logger.trace("============================================================");
     }
 }

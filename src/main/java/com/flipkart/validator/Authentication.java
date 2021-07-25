@@ -6,6 +6,9 @@ import com.flipkart.bean.Student;
 import com.flipkart.bean.User;
 import com.flipkart.constant.Role;
 import com.flipkart.dao.DBConnector;
+import com.flipkart.exceptions.InvalidCredentialsException;
+import com.flipkart.exceptions.UserNotApprovedException;
+import com.flipkart.exceptions.UserNotFoundException;
 import com.flipkart.session.Session;
 
 import java.sql.Connection;
@@ -15,11 +18,11 @@ import java.sql.SQLException;
 
 public class Authentication {
 
-    public User login(String username , String password){
+    public User login(String username , String password) throws UserNotApprovedException , InvalidCredentialsException {
 
         Connection conn = DBConnector.getInstance();
 
-        final String sql = "SELECT * from users where user_id = ? and password = ?";
+        final String sql = "SELECT * from users join professor on profId = users.user_id join student on studentID = user_id where user_id = ? and password = ?";
         try{
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , username);
@@ -30,27 +33,36 @@ public class Authentication {
                 String role = rs.getString("role");
                 switch (role) {
                     case "Professor":
-                        return new Professor(rs.getString("user_id") , rs.getString("name") , rs.getString("password") , Role.PROF);
+                        Professor professor = new Professor();
+                        professor.setId(rs.getString("user_id"));
+                        professor.setDepartment(rs.getString("department"));
+                        professor.setName(rs.getString("name"));
+                        professor.setRole(Role.PROF);
+                        professor.setDesignation(rs.getString("designation"));
+                        return professor;
                     case "Admin":
-                        return new Admin(
-                                rs.getString("user_id"),
-                                rs.getString("name"),
-                                rs.getString("password"),
-                                Role.PROF
-                        );
+                        Admin admin = new Admin();
+                        admin.setId(rs.getString("user_id"));
+                        admin.setName(rs.getString("name"));
+                        admin.setRole(Role.ADMIN);
+                        return admin;
+
                     case "Student":
-                        return new Student(
-                                rs.getString("user_id"),
-                                rs.getString("name"),
-                                rs.getString("password"),
-                                Role.PROF
-                        );
+                        if(!rs.getBoolean("isApproved")){
+                            throw new UserNotApprovedException();
+                        }
+                        Student student = new Student();
+                        student.setName(rs.getString("name"));
+                        student.setBranch(rs.getString("branch"));
+                        student.setId(rs.getString("user_id"));
+                        student.setRole(Role.STUDENT);
+                        return student;
                 }
             }
         }catch (SQLException e){
             e.printStackTrace();
         }
-        return null;
+        throw new InvalidCredentialsException();
     }
 
     public void register(String id , String name , String password){

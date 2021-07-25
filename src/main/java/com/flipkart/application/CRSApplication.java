@@ -6,8 +6,12 @@ import com.flipkart.bean.Professor;
 import com.flipkart.bean.Student;
 import com.flipkart.bean.User;
 import com.flipkart.constant.Role;
+import com.flipkart.exceptions.InvalidCredentialsException;
+import com.flipkart.exceptions.UserNotApprovedException;
+import com.flipkart.exceptions.UserNotFoundException;
 import com.flipkart.input.Helper;
 import com.flipkart.validator.Authentication;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -19,6 +23,7 @@ public class CRSApplication {
 
     public static void mainMenu() {
 
+        Logger logger = Logger.getLogger(CRSApplication.class);
         System.out.println("*********** Welcome to CRS! ************");
         System.out.println("*********** Select an Option ************");
         System.out.println("*********** 1. Login ********************");
@@ -34,17 +39,25 @@ public class CRSApplication {
 
             String id = Helper.scanString("id");
             String password = Helper.scanString("Password");
-            User user = new Authentication().login(id, password);
-            if (user == null) {
-                System.out.println("Wrong username or password");
-            } else if (user instanceof Admin) {
-                AdminCRSMenu.menu();
-            } else if (user instanceof Professor) {
-                ProfessorCRSMenu professorCRSMenu = new ProfessorCRSMenu((Professor) user);
-                professorCRSMenu.menu();
-            } else if (user instanceof Student) {
-                //     StudentCRSMenu.menu();
+            try{
+                User user = new Authentication().login(id, password);
+                if (user == null) {
+                    System.out.println("Wrong username or password");
+                } else if (user instanceof Admin) {
+                    AdminCRSMenu.menu();
+                } else if (user instanceof Professor) {
+                    ProfessorCRSMenu professorCRSMenu = new ProfessorCRSMenu((Professor) user);
+                    professorCRSMenu.menu();
+                } else if (user instanceof Student) {
+                    //     StudentCRSMenu.menu();
+                }
+            } catch (UserNotApprovedException ex){
+                logger.error(ex.getMessage());
             }
+            catch (InvalidCredentialsException ex){
+                logger.error(ex.getMessage());
+            }
+
             mainMenu();
 
         } else if (value == 2) {
