@@ -9,15 +9,16 @@ import com.flipkart.constant.Role;
 import com.flipkart.input.Helper;
 import com.flipkart.validator.Authentication;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CRSApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         mainMenu();
     }
 
-    public static void mainMenu() {
+    public static void mainMenu() throws SQLException {
 
         System.out.println("*********** Welcome to CRS! ************");
         System.out.println("*********** Select an Option ************");
@@ -43,7 +44,8 @@ public class CRSApplication {
                 ProfessorCRSMenu professorCRSMenu = new ProfessorCRSMenu((Professor) user);
                 professorCRSMenu.menu();
             } else if (user instanceof Student) {
-                //     StudentCRSMenu.menu();
+                StudentCRSMenu studentCRSMenu = new StudentCRSMenu((Student) user);
+                studentCRSMenu.menu();
             }
             mainMenu();
 

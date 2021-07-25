@@ -12,7 +12,7 @@ public class DBConnector {
     private DBConnector(){
 
         try{
-            instance = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs" , "root", "Jediproject@44");
+            instance = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs" , "root", "43061186");
             System.out.println("Connected!");
 
         }

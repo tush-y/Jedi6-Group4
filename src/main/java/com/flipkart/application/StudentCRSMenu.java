@@ -10,6 +10,7 @@ import com.flipkart.business.StudentOperationInterface;
 import com.flipkart.input.Helper;
 import org.apache.log4j.Logger;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -24,7 +25,7 @@ public class StudentCRSMenu {
         studentOperation = new StudentOperation(student);
     }
 
-    public void menu(){
+    public void menu() throws SQLException {
 
         Logger logger = Logger.getLogger(StudentCRSMenu.class);
         ArrayList<String> list = new ArrayList<>(Arrays.asList("View Enrolled Course" , "Add Course" , "Drop Course" , "Register" ,"View Grade Card","Pay Fees","Log Out"));
@@ -42,16 +43,13 @@ public class StudentCRSMenu {
             menu();
         }
         else if(value == 1){
-            System.out.println("View Enrolled Course Called");
             studentOperation.viewEnrolledCourses();
         }
         else if(value==2){
-            System.out.println("Add Course Called");
             String  courseCode = Helper.scanString("courseCode");
             studentOperation.addCourse(courseCode);
         }
         else if(value==3){
-            System.out.println("Drop Course Called");
             String  courseCode = Helper.scanString("courseCode");
             studentOperation.dropCourse(courseCode);
         }
@@ -60,7 +58,7 @@ public class StudentCRSMenu {
         }
 
         else if(value==5){
-            System.out.println("View Grade Card");
+            studentOperation.viewGradeCard();
         }
         else if(value==6){
             studentOperation.payFees();
@@ -72,7 +70,7 @@ public class StudentCRSMenu {
         menu();
     }
 
-    public static void signUpMenu(ArrayList<User> list){
+    public static void signUpMenu(ArrayList<User> list) throws SQLException {
         Student student = new Student();
         student.setName(Helper.scanString("Name"));
         student.setId(Helper.scanString("id"));
