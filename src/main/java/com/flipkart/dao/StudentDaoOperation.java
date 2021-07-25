@@ -1,15 +1,22 @@
 package com.flipkart.dao;
 
 import com.flipkart.bean.Course;
+import com.flipkart.bean.StudentGrade;
+import com.flipkart.constant.SQLqueries;
 import com.flipkart.input.Helper;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentDaoOperation implements StudentDaoInterface {
     private final Connection conn;
+    private PreparedStatement stmt = null;
+    private static Logger logger = Logger.getLogger(StudentDaoOperation.class);
     public StudentDaoOperation(){
         conn = DBConnector.getInstance();
     }
@@ -17,7 +24,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
     public void viewEnrolledCourses(String studentId)
     {
         try{
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM instructor;");
+            stmt = conn.prepareStatement("SELECT * FROM instructor;");
             String sql = "SELECT * FROM course_catalog WHERE course_code in (select course_code from students where student_id = ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1 , studentId);
@@ -35,40 +42,131 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
     }
 
-    public void addCourse(String studentId, String courseCode)
-    {
-        Connection conn = DBConnector.getInstance();
+    /**
+     * Method to add course in database
+     * @param courseCode : code for selected course
+     * @param studentId : ID of student
+     * @return void
+     * @throws SQLException
+     */
 
+    public void addCourse(String studentId, String courseCode) throws SQLException {
+        try
+        {
+            stmt = conn.prepareStatement(SQLqueries.NUMBER_OF_REGISTERED_COURSES);
+            stmt.setString(1, courseCode);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.getInt("count(studentId)") < 6) {
+                stmt = conn.prepareStatement(SQLqueries.ADD_COURSE);
+                stmt.setString(1, studentId);
+                stmt.setString(2, courseCode);
 
-        final String sql = "INSERT INTO students values (? , ? ,?)";
-        try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1 , studentId);
-            stmt.setString(2 , courseCode);
-            stmt.setString(3 , "No");
-            stmt.executeUpdate();
-            System.out.println("Successfully Assigned.");
+                stmt.executeUpdate();
+
+                stmt = conn.prepareStatement(SQLqueries.DECREASE_SEATS);
+                stmt.setString(1, courseCode);
+                stmt.executeUpdate();
+            }
+            else {
+                logger.warn("Maximum Courses added. Drop Course to add more.");
+            }
         }
-        catch (SQLException e){
-            e.printStackTrace();
+        catch (SQLException e)
+        {
+            logger.info(e.getMessage());
+        }
+        finally
+        {
+            stmt.close();
+            conn.close();
         }
     }
 
-    public void dropCourse(String studentId, String courseCode)
-    {
-        Connection conn = DBConnector.getInstance();
+    /**
+     * Drop Course selected by student
+     * @param courseCode : code for selected course
+     * @param studentId : ID of student
+     * @return void
+     * * @throws SQLException
+     */
 
-        final String sql = "DELETE from Students where student_id=? and course_code=?";
-        try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1 , studentId);
-            stmt.setString(2 , courseCode);
-            stmt.executeUpdate();
-            System.out.println("Deleted.");
+    public void dropCourse(String studentId, String courseCode) throws SQLException {
+        try
+        {
+            stmt = conn.prepareStatement(SQLqueries.NUMBER_OF_REGISTERED_COURSES);
+            stmt.setString(1, courseCode);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.getInt("count(studentId)") > 4) {
+                stmt = conn.prepareStatement(SQLqueries.DROP_COURSE_QUERY);
+                stmt.setString(1, courseCode);
+                stmt.setString(2, studentId);
+                stmt.execute();
+
+                stmt = conn.prepareStatement(SQLqueries.INCREASE_SEATS);
+                stmt.setString(1, courseCode);
+                stmt.execute();
+            }
+            else {
+                logger.warn("Can't register less than 4 courses. Add the course first.");
+            }
         }
-        catch (SQLException e){
-            e.printStackTrace();
+        catch(Exception e)
+        {
+            logger.info(e.getMessage());
         }
+        finally
+        {
+            stmt.close();
+            conn.close();
+        }
+    }
+
+    /**
+     * Method to view grade card of the student
+     * @param studentId
+     * @throws SQLException
+     * @return Student's grade card
+     */
+
+    public List<StudentGrade> viewGradeCard(String studentId) throws SQLException {
+
+        List<StudentGrade> gradeCard = new ArrayList<>();
+        try
+        {
+            stmt = conn.prepareStatement(SQLqueries.IS_APPROVED);
+            stmt.setString(1, studentId);
+            ResultSet rs = stmt.executeQuery();
+            rs.next();
+            if(rs.getBoolean("isApproved")) {
+                stmt = conn.prepareStatement(SQLqueries.VIEW_GRADE);
+                stmt.setString(1, studentId);
+                rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    String courseCode = rs.getString("courseCode");
+                    String grade = rs.getString("grade");
+                    StudentGrade obj = new StudentGrade(courseCode, grade);
+                    gradeCard.add(obj);
+                }
+            }
+            else {
+                logger.warn("Grades are not approved by Admin");
+            }
+        }
+        catch(SQLException e)
+        {
+            logger.info(e.getMessage());
+        }
+        catch(Exception e)
+        {
+            logger.info(e.getMessage());
+        }
+        finally
+        {
+            stmt.close();
+            conn.close();
+        }
+        return gradeCard;
     }
 
     public void payFees(String studentId) {
@@ -77,7 +175,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
         try{
             String sql = "select * from students where student_id = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
             stmt.setString(1 , studentId);
             ResultSet rs = stmt.executeQuery();
             rs.next();
@@ -90,7 +188,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
                 System.out.println("2. Netbanking");
                 System.out.println("3. UPI");
                 Integer i = Helper.scanInt();
-                String str[]={"Debit / Credit Card","Netbanking","UPI"};
                 switch(i) {
                     case 1:  String cardNumber = Helper.scanString("Card Number");
                              String pin = Helper.scanString("PIN");
@@ -108,8 +205,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
                 stmt = conn.prepareStatement(sql);
                 stmt.setString(1 , studentId);
                 stmt.executeUpdate();
-                NotificationDaoOperation notificationDaoOperation=new NotificationDaoOperation();
-                notificationDaoOperation.sendNotification(studentId,str[i]);
             }
         }
         catch (SQLException ex){
@@ -117,12 +212,4 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
         }
     }
-
-public static void main(String args[])
-{
-    StudentDaoOperation st=new StudentDaoOperation();
-    st.addCourse("abdul","23");
-
-}
-
 }
