@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  *
@@ -33,17 +34,19 @@ public class NotificationDaoOperation implements NotificationDaoInterface{
     @Override
     public void sendNotification(String studentId, String mode)
     {
-        final String sql = "INSERT INTO notification values (? , ? , ? , ?)";
+        final String sql = "INSERT INTO notification values (? , ? , ? , ? , ?)";
         try {
+            UUID uniqueKey = UUID.randomUUID();
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , studentId);
             stmt.setString(2 , mode);
             stmt.setString(3,"payment succesful");
             stmt.setInt(4,0);
-
+            String uid=uniqueKey.toString();
+            stmt.setString(5,uid);
             stmt.executeUpdate();
             logger.info("******* Payment Succesfully completed. ******");
-            logger.info("****** Transaction Id is y27y88289199 ********");
+            logger.info("****** Transaction Id is "+uid+" ********");
         }
         catch (SQLException e){
             e.printStackTrace();

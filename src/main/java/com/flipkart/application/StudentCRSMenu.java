@@ -66,7 +66,7 @@ public class StudentCRSMenu {
             studentOperation.dropCourse(courseCode);
         }
         else if(value==4){
-            System.out.println("Register Courses");
+            studentOperation.register();
         }
 
         else if(value==5){

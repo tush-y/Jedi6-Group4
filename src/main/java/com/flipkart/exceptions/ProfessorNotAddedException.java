@@ -1,6 +1,6 @@
 package com.flipkart.exceptions;
 
-public class ProfessorNotAddedException {
+public class ProfessorNotAddedException extends Throwable {
     private String professorId;
 
     public ProfessorNotAddedException(String professorId) {

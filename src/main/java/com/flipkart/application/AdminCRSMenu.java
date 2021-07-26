@@ -30,15 +30,13 @@ public class AdminCRSMenu {
             menu();
         }
         else if(value == 1){
-            System.out.println("------------ADD COURSE CALLED------------");
             Course course=new Course();
 
-
-            String course_code=Helper.scanString(" the course code:->");
+            String course_code=Helper.scanString("the course code:->");
             course.setCourseCode(course_code);
-            String course_name=Helper.scanString(" the course name:->");
+            String course_name=Helper.scanString("the course name:->");
             course.setCourseName(course_name);
-            String description=Helper.scanString(" the course description:->");
+            String description=Helper.scanString("the course description:->");
             course.setDescription(description);
             Scanner sc=new Scanner(System.in);
             System.out.println("Enter the seats:->");
@@ -49,41 +47,33 @@ public class AdminCRSMenu {
             operation.addCourse(course);
         }
         else if(value==2){
-            System.out.println("------------REMOVE COURSE CALLED------------");
 
-            String course_code=Helper.scanString(" the course code");
+            String course_code=Helper.scanString("the course code");
             AdminOperation operation=new AdminOperation();
             operation.removeCourse(course_code);
         }
         else if(value==3)
         {
-            System.out.println("------------ADD PROFESSOR CALLED------------");
-            Professor professor=new Professor();
-            String professor_id=Helper.scanString(" the Professor_id:->");
-            professor.setId(professor_id);
+
+            String professor_id=Helper.scanString("the Professor_id:->");
             String professor_name=Helper.scanString("the professor Name:->");
-            professor.setName(professor_name);
+            String professor_password=Helper.scanString("the password:->");
+            Professor professor=new Professor(professor_id, professor_name, professor_password, Role.PROF);
             String professor_designation=Helper.scanString("the professor designation:->");
             professor.setDesignation(professor_designation);
-            String professor_department=Helper.scanString("he professor department:->");
+            String professor_department=Helper.scanString("professor department:->");
             professor.setDepartment(professor_department);
             AdminOperation operation=new AdminOperation();
             operation.addProfessor(professor);
         }
         else if(value==4){
-            System.out.println("------------APPROVE STUDENT CALLED------------");
 
-            String student_id=Helper.scanString(" the student Id");
+            String student_id=Helper.scanString("the student Id");
             AdminOperation operation=new AdminOperation();
             operation.approveStudent(student_id);
         }
-        System.out.println("Enter Y to continue , else press any other key");
-        Scanner sc=new Scanner(System.in);
-        char c=sc.next().charAt(0);
-        if(c=='Y')
-        {
-            menu();
-        }
+
+        menu();
     }
 
     public static void login(){

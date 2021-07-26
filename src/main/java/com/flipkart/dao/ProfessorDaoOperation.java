@@ -56,7 +56,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
         Connection conn = DBConnector.getInstance();
         ArrayList<ArrayList<String>> result = new ArrayList<>();
-        if(checkCourseIsTaught(profId , courseCode)){
+        if(!checkCourseIsTaught(profId , courseCode)){
             throw new CourseNotTaughtException(courseCode);
         }
         try{
@@ -161,7 +161,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         Connection conn = DBConnector.getInstance();
 
         try{
-            final String sql = "SELECT * grades where studentId = ? and courseCode = ?";
+            final String sql = "SELECT * from grades where studentId = ? and courseCode = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , studentId);
             stmt.setString(2 , courseCode);
@@ -194,10 +194,11 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         return false;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws GradesAlreadyGivenException {
 
         ProfessorDaoOperation operation = new ProfessorDaoOperation();
 //        ArrayList<Course>  courses = operation.getCourseByProf("Prof001");
 //        System.out.println(courses);
+        operation.addGrades("LIT2017022" , "CS009" , 10);
     }
 }

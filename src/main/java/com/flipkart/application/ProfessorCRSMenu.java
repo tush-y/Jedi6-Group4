@@ -57,8 +57,8 @@ public class ProfessorCRSMenu {
             }
         }
         else if(value==3){
-            System.out.println("View Enrolled Student Called");
-
+            String courseCode = Helper.scanString("course code");
+            professorOperation.viewEnrolledStudent(courseCode);
         }
         else if(value==4){
             professorOperation.viewCourses();
