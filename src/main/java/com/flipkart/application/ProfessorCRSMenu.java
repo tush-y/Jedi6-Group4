@@ -2,6 +2,7 @@ package com.flipkart.application;
 
 import com.flipkart.bean.Professor;
 import com.flipkart.business.ProfessorOperation;
+import com.flipkart.constant.Grade;
 import com.flipkart.exceptions.CourseAlreadyRegisteredException;
 import com.flipkart.input.Helper;
 import com.flipkart.validator.Authentication;
@@ -41,7 +42,10 @@ public class ProfessorCRSMenu {
         }
         else if(value == 1){
 
-            System.out.println("Add Grades called");
+            String studentId = Helper.scanString("studentId");
+            String courseCode = Helper.scanString("course code");
+            Integer grade = Helper.scanInt("grades [5 to 10]");
+            professorOperation.addGrades(studentId , courseCode , grade);
 
         }
         else if(value==2){

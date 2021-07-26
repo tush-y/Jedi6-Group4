@@ -6,9 +6,7 @@ import com.flipkart.bean.Professor;
 import com.flipkart.bean.Student;
 import com.flipkart.bean.User;
 import com.flipkart.constant.Role;
-import com.flipkart.exceptions.InvalidCredentialsException;
-import com.flipkart.exceptions.UserNotApprovedException;
-import com.flipkart.exceptions.UserNotFoundException;
+import com.flipkart.exceptions.*;
 import com.flipkart.input.Helper;
 import com.flipkart.validator.Authentication;
 import org.apache.log4j.Logger;
@@ -34,7 +32,6 @@ public class CRSApplication {
         Integer value = Helper.scanInt();
         if (value == null || value > 4) {
             System.out.println("Invalid Option");
-            mainMenu();
         } else if (value == 1) {
 
             String id = Helper.scanString("id");
@@ -59,19 +56,36 @@ public class CRSApplication {
                 logger.error(ex.getMessage());
             }
 
-            mainMenu();
-
         } else if (value == 2) {
 
-            String name = Helper.scanString("Name");
             String id = Helper.scanString("id");
+            String name = Helper.scanString("Name");
             String password = Helper.scanString("Password");
             String branch = Helper.scanString("Branch");
+            try {
+                new Authentication().register(id , name , password , branch);
+            }catch (UserAlreadyExistsException ex){
+                logger.warn(ex.getMessage());
+            }
 
         } else if (value == 3) {
-            // Update password will go here
+
+            String id = Helper.scanString("id");
+            String oldPass = Helper.scanString("Old Password");
+            String newPass = Helper.scanString("New Password");
+            String confirmNewPass = Helper.scanString("Confirm new Password");
+
+            try{
+                new Authentication().updatePassword(id , oldPass , newPass , confirmNewPass);
+            }catch (AuthException | InvalidCredentialsException ex){
+                logger.error(ex.getMessage());
+            }
+            catch (UserNotFoundException ex){
+                logger.warn(ex.getMessage());
+            }
         } else if (value == 4) {
             System.exit(0);
         }
+        mainMenu();
     }
 }

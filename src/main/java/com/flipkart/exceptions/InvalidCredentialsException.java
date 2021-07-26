@@ -7,6 +7,6 @@ public class InvalidCredentialsException extends Exception{
     }
     @Override
     public String getMessage(){
-        return "This Wrong UserId or Password";
+        return "Wrong UserId or Password";
     }
 }

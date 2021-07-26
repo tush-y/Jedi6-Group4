@@ -28,16 +28,16 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
         ArrayList<Course> result = new ArrayList<>();
         try{
-            String sql = "SELECT * FROM course_catalog WHERE course_code in (select course_code from instructor where profId = ?)";
+            String sql = "SELECT * FROM courseCatalog WHERE coursecode in (select coursecode from instructor where profId = ?)";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , profId);
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()){
 
-                String code = rs.getString("course_code");
+                String code = rs.getString("courseCode");
                 String description = rs.getString("description");
-                String course_name = rs.getString("course_name");
+                String course_name = rs.getString("courseName");
                 Integer seats = rs.getInt("seats");
 
                 Course tmp_course = new Course(code, course_name , seats , description);
@@ -82,17 +82,17 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
     }
 
     @Override
-    public void addGrades(String studentId, String courseCode, String grade) throws GradesAlreadyGivenException {
+    public void addGrades(String studentId, String courseCode, int grade) throws GradesAlreadyGivenException {
 
         if (checkIfGradesAlreadyGiven(studentId , courseCode)){
             throw new GradesAlreadyGivenException(studentId);
         }
         try {
             PreparedStatement stmt = conn.prepareStatement(SQLQueriesConstant.addGrades);
-            stmt.setString(1 , grade);
+            stmt.setString(1 , Integer.toString(grade));
             stmt.setString(2 , studentId);
             stmt.setString(3, courseCode);
-            stmt.executeQuery();
+            stmt.executeUpdate();
             logger.info("Grades Added");
 
         }catch (SQLException ex){
@@ -108,7 +108,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
             stmt.setString(1 , grade);
             stmt.setString(2 , studentId);
             stmt.setString(3, courseCode);
-            stmt.executeQuery();
+            stmt.executeUpdate();
             logger.info("Grades Updated");
 
         }catch (SQLException ex){
@@ -139,7 +139,7 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
     private boolean checkIfSignedUp(String profId , String courseCode){
 
-        final String sql = "SELECT * from instructor where profId = ? and course_code = ?";
+        final String sql = "SELECT * from instructor where profId = ? and coursecode = ?";
 
         try{
             PreparedStatement stmt = conn.prepareStatement(sql);

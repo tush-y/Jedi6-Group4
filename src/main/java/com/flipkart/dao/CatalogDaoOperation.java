@@ -20,9 +20,9 @@ public class CatalogDaoOperation implements CatalogDaoInterface{
             ResultSet rs = stmt.executeQuery();
             while(rs.next()){
 
-                String code = rs.getString("course_code");
+                String code = rs.getString("courseCode");
                 String description = rs.getString("description");
-                String course_name = rs.getString("course_name");
+                String course_name = rs.getString("courseName");
                 Integer seats = rs.getInt("seats");
 
                 Course tmp_course = new Course(code, course_name , seats , description);

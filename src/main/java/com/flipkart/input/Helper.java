@@ -17,6 +17,20 @@ public class Helper {
         return null;
     }
 
+    public static Integer scanInt(String message){
+
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Enter " + message + " : ");
+        String s = scan.next();
+        try{
+            return Integer.parseInt(s);
+        }
+        catch (NumberFormatException e){
+            System.out.println("Number not valid");
+            return scanInt(message);
+        }
+    }
+
     public static String scanString(String message){
         Scanner scan = new Scanner(System.in);
 

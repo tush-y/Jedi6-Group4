@@ -12,7 +12,7 @@ public interface ProfessorDaoInterface {
 
     ArrayList<Course> getCourseByProf(String profId);
     ArrayList<ArrayList<String>> getEnrolledStudents(String profId , String courseCode) throws CourseNotTaughtException;
-    void addGrades(String studentId , String courseCode , String grade) throws GradesAlreadyGivenException;
+    void addGrades(String studentId , String courseCode , int grade) throws GradesAlreadyGivenException;
     void updateGrades(String studentId , String courseCode , String grade);
     void chooseCourse(String profId , String courseCode) throws CourseAlreadyRegisteredException;
 }
