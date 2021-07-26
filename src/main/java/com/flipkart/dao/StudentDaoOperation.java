@@ -1,8 +1,11 @@
 package com.flipkart.dao;
 
 import com.flipkart.bean.StudentGrade;
+import com.flipkart.constant.SQLQueriesConstant;
 import com.flipkart.constant.SQLqueries;
+import com.flipkart.exceptions.RegistrationNotCompleteException;
 import com.flipkart.input.Helper;
+import com.sun.tools.classfile.ConstantPool;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -20,6 +23,13 @@ public class StudentDaoOperation implements StudentDaoInterface {
         conn = DBConnector.getInstance();
     }
 
+
+    /**
+     * Method to view all the enrolled courses
+     * @param studentId
+     * @throws SQLException
+     */
+
     public void viewEnrolledCourses(String studentId)
     {
         try{
@@ -28,9 +38,11 @@ public class StudentDaoOperation implements StudentDaoInterface {
             stmt.setString(1 , studentId);
             ResultSet rs = stmt.executeQuery();
 
+
             while(rs.next()){
-                String course_name = rs.getString("courseCode");
-                System.out.println(course_name);
+                String course_name = rs.getString("courseName");
+                String courseId = rs.getString("courseCode");
+                System.out.println(course_name + "          " + courseId);
             }
 
         }
@@ -48,23 +60,38 @@ public class StudentDaoOperation implements StudentDaoInterface {
      * @throws SQLException
      */
 
-    public void addCourse(String studentId, String courseCode) throws SQLException {
+
+    public void addCourse(String studentId, String courseCode) throws SQLException , RegistrationNotCompleteException {
         try
         {
-            stmt = conn.prepareStatement(SQLqueries.NUMBER_OF_REGISTERED_COURSES);
+
+            if(getCountOfRegisterdCourses(studentId) < 4){
+                throw new RegistrationNotCompleteException();
+            }
+            stmt = conn.prepareStatement(SQLQueriesConstant.IS_COURSE_REGISTERED);
+            stmt.setString(1, studentId);
+            stmt.setString(2, courseCode);
+            ResultSet rs1 = stmt.executeQuery();
+            rs1.next();
+            stmt = conn.prepareStatement(SQLQueriesConstant.GET_AVAILABLE_SEATS);
             stmt.setString(1, courseCode);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            if (rs.getInt("cnt") < 6) {
+            ResultSet rs2 = stmt.executeQuery();
+            rs2.next();
+            if ((getCountOfRegisterdCourses(studentId) < 6) && (rs1.getInt("cnt") == 0) && (rs2.getInt("seats") > 0)) {
                 stmt = conn.prepareStatement(SQLqueries.ADD_COURSE);
                 stmt.setString(1, studentId);
                 stmt.setString(2, courseCode);
-
                 stmt.executeUpdate();
-
                 stmt = conn.prepareStatement(SQLqueries.DECREASE_SEATS);
                 stmt.setString(1, courseCode);
                 stmt.executeUpdate();
+                logger.info(String.format("%s registered", courseCode));
+            }
+            else if(rs1.getInt("cnt") != 0){
+                logger.warn("This course is already registered");
+            }
+            else if(rs2.getInt("seats") <= 0){
+                logger.warn("No seats left for this course");
             }
             else {
                 logger.warn("Maximum Courses added. Drop Course to add more.");
@@ -92,11 +119,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
     public void dropCourse(String studentId, String courseCode) throws SQLException {
         try
         {
-            stmt = conn.prepareStatement(SQLqueries.NUMBER_OF_REGISTERED_COURSES);
-            stmt.setString(1, courseCode);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            if (rs.getInt("cnt") > 4) {
+            if (getCountOfRegisterdCourses(studentId) > 4) {
                 stmt = conn.prepareStatement(SQLqueries.DROP_COURSE_QUERY);
                 stmt.setString(1, courseCode);
                 stmt.setString(2, studentId);
@@ -107,12 +130,12 @@ public class StudentDaoOperation implements StudentDaoInterface {
                 stmt.execute();
             }
             else {
-                logger.warn("Can't Drop . Number of courses can't be less than 4 .");
+                logger.warn("******  Can't Drop . Number of courses can't be less than 4 . *******");
             }
         }
         catch(Exception e)
         {
-            logger.info(e.getMessage());
+            logger.error(e.getMessage());
         }
 //        finally
 //        {
@@ -150,7 +173,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
                 }
             }
             else {
-                logger.warn("Grades are not approved by Admin");
+                logger.warn("******** Grades are not approved by Admin ********");
             }
         }
         catch(SQLException e)
@@ -169,27 +192,31 @@ public class StudentDaoOperation implements StudentDaoInterface {
         return gradeCard;
     }
 
+
+
+    /**
+     * Method to pay fee of the student
+     * @param studentId
+     * @throws SQLException
+     */
+
     public void payFees(String studentId) {
 
         Connection conn = DBConnector.getInstance();
 
         try{
-            String sql = "select * from student where studentid = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1 , studentId);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            String status = rs.getString("fees_paid");
-            if(status.equals("Yes"))
-                System.out.println("Fees Already Paid");
+           if(checkFeeAlreadyPaid(studentId)){
+               logger.info("Fees already Paid");
+           }
             else {
-                System.out.println("Choose method to pay:");
-                System.out.println("1. Debit / Credit Card");
-                System.out.println("2. Netbanking");
-                System.out.println("3. UPI");
+                System.out.println("******* Choose method to pay: **********");
+                System.out.println("******* 1. Debit / Credit Card *********");
+                System.out.println("******* 2. Netbanking ***********");
+                System.out.println("******** 3. UPI ***********");
+                String modeP[]={"Debit/Credit","NetBanking","UPI"};
                 Integer i = Helper.scanInt();
                 switch(i) {
-                    case 1:  String cardNumber = Helper.scanString("Card Number");
+                    case 1:  String cardNumber = Helper.scanString("Card Number ");
                              String pin = Helper.scanString("PIN");
                                 break;
                     case 2:  String bankingId = Helper.scanString("Customer ID");
@@ -198,19 +225,73 @@ public class StudentDaoOperation implements StudentDaoInterface {
                     case 3:  String UPI = Helper.scanString("UPI ID");
                              String upiPin = Helper.scanString("UPI PIN");
                                 break;
-                    default: System.out.println("invalid input. Enter Again.");
+                    default: System.out.println("******** invalid input. Enter Again. ********");
                                 payFees(studentId);
                 }
-//                sql = "update student set fees_paid = 'Yes'  where studentid=?";
-                sql = "Select * from student";
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1 , studentId);
+                stmt = conn.prepareStatement(SQLqueries.ADD_PAYMENT);
+                stmt.setString(1, studentId);
+                stmt.setInt(2,1);
+                stmt.setString(3,modeP[i-1]);
+
                 stmt.executeUpdate();
+                NotificationDaoOperation notificationDaoOperation=new NotificationDaoOperation();
+                notificationDaoOperation.sendNotification(studentId,modeP[i-1]);
             }
         }
         catch (SQLException ex){
             ex.printStackTrace();
 
         }
+    }
+
+    public void addSingleCourse(String studentId , String courseCode){
+
+        Connection conn = DBConnector.getInstance();
+        logger.info(studentId);
+        logger.info(courseCode);
+        try{
+            PreparedStatement stmt = conn.prepareStatement(SQLQueriesConstant.ADD_SINGLE_COURSE);
+            stmt.setString(1 , studentId);
+            stmt.setString(2 , courseCode);
+            stmt.executeUpdate();
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private boolean checkFeeAlreadyPaid(String studentId){
+
+        Connection conn = DBConnector.getInstance();
+
+        try{
+            PreparedStatement stmt = conn.prepareStatement(SQLqueries.SELECT_PAYMENT_ROW);
+            stmt.setString(1, studentId);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                int status = rs.getInt("feesPaid");
+                if(status==1)
+                    return true;
+            }
+        }catch (SQLException ex){
+            logger.error(ex.getMessage());
+        }
+        return false;
+
+    }
+
+    private int getCountOfRegisterdCourses(String studentId){
+
+        try {
+            stmt = conn.prepareStatement(SQLqueries.NUMBER_OF_REGISTERED_COURSES);
+            stmt.setString(1, studentId);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                int count = rs.getInt("cnt");
+                return count;
+            }
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return 0;
     }
 }

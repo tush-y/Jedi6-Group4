@@ -1,54 +1,69 @@
 package com.flipkart.dao;
-
 import java.sql.*;
-
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
-
-
+import com.flipkart.constant.SQLQueriesConstant;
+import com.flipkart.constant.SQLqueries;
+import com.flipkart.exceptions.*;
+import org.apache.log4j.Logger;
+/**
+ * @author JEDI-06
+ * Dao Class Operation for Admin
+ */
 public class AdminDaoOperation implements AdminDaoInterface {
-
     private final Connection conn;
     public AdminDaoOperation()
     {
         conn = DBConnector.getInstance();
     }
-
+    /**
+     *
+     * @param course
+     * @throws CourseFoundException
+     */
     @Override
-    public void addCourse(Course course)
+    public void addCourse(Course course) throws CourseFoundException
     {
         try
-         {
-             String sql="insert into courseCatalog(courseCode, courseName, description, seats) values (?, ?, ?, ?)";
+        {
+            String sql= SQLQueriesConstant.INSERT_COURSE;
             PreparedStatement stmt = conn.prepareStatement(sql);
-
             stmt.setString(1, course.getCourseCode());
             stmt.setString(2, course.getCourseName());
             stmt.setString(3, course.getDescription());
-
             stmt.setInt(4, course.getSeats());
             int row = stmt.executeUpdate();
-
             System.out.println(row +" Course Added");
+            if(row==0)
+            {
+                System.out.println("Course with Course Code: " +course.getCourseCode()+ "not added to catalog");
+            }
         }
         catch(SQLException ex)
         {
             ex.printStackTrace();
+            throw new CourseFoundException(course.getCourseCode());
         }
-
     }
-
+    /**
+     *
+     * @param courseCode
+     * @throws CourseNotFoundException
+     */
     @Override
-    public void removeCourse(String courseCode)
+    public void removeCourse(String courseCode) throws  CourseNotFoundException
     {
         try
         {
             String sql="delete from courseCatalog where courseCode = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-
             stmt.setString(1, courseCode);
             int row = stmt.executeUpdate();
-
+            if(row==0)
+            {
+                System.out.println("The course having provided courseCode doesn't exist");
+                throw new CourseNotFoundException(courseCode);
+            }
             System.out.println(row +" Course Removed");
         }
         catch(SQLException ex)
@@ -56,49 +71,64 @@ public class AdminDaoOperation implements AdminDaoInterface {
             ex.printStackTrace();
         }
     }
-    public void addProfessor(Professor professor)
+    /**
+     *
+     * @param professor
+     * @throws ProfessorNotAddedException
+     */
+    public void addProfessor(Professor professor) throws ProfessorNotAddedException
     {
         try
         {
-            //insertion in instructor table
-            String sql_prof="insert into professor(profId, profDesignation,profDep) values (?, ?, ?)";
+            /**
+             * insertion in professor table
+             */
+            String sql_prof="insert into professor(profId, department,designation) values (?, ?, ?)";
             PreparedStatement stmt_prof = conn.prepareStatement(sql_prof);
             stmt_prof.setString(1, professor.getId());
             stmt_prof.setString(2, professor.getDesignation());
             stmt_prof.setString(3, professor.getDepartment());
             int row_prof= stmt_prof.executeUpdate();
-
             System.out.println(row_prof+" Professor Added in Professor");
-
-            //insertion in user table
+            if(row_prof==0)
+            {
+                System.out.println("Professor with professor ID:+: "+professor.getId()+ " not added");
+                throw new ProfessorNotAddedException(professor.getId());
+            }
+            /**
+             * insertion in user table
+             */
             String sql_user="insert into users(userId, name,password, role) values (?, ?, ?, ?)";
             PreparedStatement stmt_user = conn.prepareStatement(sql_user);
             stmt_user.setString(1, professor.getId());
             stmt_user.setString(2, professor.getName());
-            stmt_user.setString(3, "admin");
-            stmt_user.setString(4, professor.getDesignation());
+            stmt_user.setString(3, professor.getPassword());
+            stmt_user.setString(4, "PROFESSOR");
             int row_user = stmt_user.executeUpdate();
-
             System.out.println(row_user +" Professor Added in User");
-
         }
         catch(SQLException ex)
         {
-           ex.printStackTrace();
-         }
+            ex.printStackTrace();
+        }
     }
-    public void approveStudent(String id)
+    /**
+     *
+     * @param id
+     * @throws StudentNotFoundException
+     */
+    public void approveStudent(String id) throws StudentNotFoundException
     {
         try
         {
             String sql="update student set isApproved = true where studentID = ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
-
             stmt.setString(1, id);
             int row = stmt.executeUpdate();
             if(row==0)
             {
                 System.out.println("Student with provided student id doesn't exist");
+                throw new StudentNotFoundException(id);
             }
             else
             {
@@ -110,6 +140,4 @@ public class AdminDaoOperation implements AdminDaoInterface {
             ex.printStackTrace();
         }
     }
-
 }
-

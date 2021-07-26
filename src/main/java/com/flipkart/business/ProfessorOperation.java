@@ -8,8 +8,10 @@ import com.flipkart.dao.CatalogDaoOperation;
 import com.flipkart.dao.ProfessorDaoOperation;
 import com.flipkart.exceptions.CourseAlreadyRegisteredException;
 import com.flipkart.exceptions.CourseNotTaughtException;
+import com.flipkart.exceptions.GradesAlreadyGivenException;
 import com.mysql.cj.log.Log;
 import org.apache.log4j.Logger;
+import sun.security.util.math.intpoly.P256OrderField;
 
 import java.util.ArrayList;
 
@@ -21,9 +23,14 @@ public class ProfessorOperation implements ProfessorOperationInterface {
         this.professor = professor;
     }
     @Override
-    public void addGrades(String studentId, Grade value) {
+    public void addGrades(String studentId, String courseCode , int grade) {
 
-
+        ProfessorDaoOperation operation = new ProfessorDaoOperation();
+        try {
+            operation.addGrades(studentId , courseCode , grade);
+        }catch (GradesAlreadyGivenException ex){
+            logger.warn(ex.getMessage());
+        }
     }
 
     @Override

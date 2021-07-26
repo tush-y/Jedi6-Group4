@@ -14,6 +14,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+/**
+ *
+ * @author JEDI-06 Group 4
+ *  The class displays the menu for student client
+ *
+ */
+
 
 public class StudentCRSMenu {
 
@@ -24,6 +31,11 @@ public class StudentCRSMenu {
         this.student = student;
         studentOperation = new StudentOperation(student);
     }
+
+    /**
+     * Method to generate Student Menu for course registration, addition, removal and fee payment
+     */
+
 
     public void menu() {
 
@@ -54,7 +66,7 @@ public class StudentCRSMenu {
             studentOperation.dropCourse(courseCode);
         }
         else if(value==4){
-            System.out.println("Register Courses");
+            studentOperation.register();
         }
 
         else if(value==5){

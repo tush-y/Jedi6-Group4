@@ -24,7 +24,8 @@ public class DBConnector {
 
     public static Connection getInstance(){
 
-        new DBConnector();
+        if(instance==null)
+            new DBConnector();
         return instance;
     }
 }
