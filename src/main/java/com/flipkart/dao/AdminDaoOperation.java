@@ -3,9 +3,8 @@ import java.sql.*;
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
 import com.flipkart.constant.SQLQueriesConstant;
-import com.flipkart.constant.SQLqueries;
 import com.flipkart.exceptions.*;
-import org.apache.log4j.Logger;
+
 /**
  * @author JEDI-06
  * Dao Class Operation for Admin

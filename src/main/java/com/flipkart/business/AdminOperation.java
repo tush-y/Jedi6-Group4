@@ -2,12 +2,8 @@ package com.flipkart.business;
 
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
-import com.flipkart.constant.Grade;
 import com.flipkart.dao.AdminDaoOperation;
-import com.flipkart.bean.Course;
-import com.flipkart.bean.Professor;
 import com.flipkart.exceptions.*;
-import com.flipkart.constant.SQLqueries;
 
 public class AdminOperation implements AdminOperationInterface {
 

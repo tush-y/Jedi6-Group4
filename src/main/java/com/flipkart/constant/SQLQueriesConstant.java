@@ -19,9 +19,6 @@ public class SQLQueriesConstant {
 
 
 
-
-
-
     // Users
     public static final String getUserByID = "SELECT userId from users WHERE userId = ?";
     public static final String getUserByIDAndPassword = "SELECT userId from users WHERE userId = ? and password = ?";
@@ -30,13 +27,20 @@ public class SQLQueriesConstant {
 
 
 
-
     // Student
     public static final String addStudent = "INSERT INTO student values (? , ? , ?)";
-    public static final String IS_APPROVED=" select isApproved from registeredCourse where studentId=?; ";
     public static final String IS_COURSE_REGISTERED = "select count(*) as cnt from registeredCourse where studentId = ? AND courseCode = ?;";
     public static final String GET_AVAILABLE_SEATS = "select seats from courseCatalog where courseCode = ?;";
     public static final String ADD_SINGLE_COURSE = "INSERT INTO registeredCourse values(? , ? ,'NA' , 0)";
+    public static final String DECREASE_SEATS="update courseCatalog set seats = seats-1 where courseCode = ? ";
+    public static final String ADD_COURSE ="insert into registeredCourse (studentId,courseCode) values ( ? , ? )";
+    public static final String DROP_COURSE_QUERY = "delete from registeredcourse where courseCode = ? AND studentId = ?;";
+    public static final String INCREASE_SEATS  = "update courseCatalog set seats = seats + 1 where  courseCode = ?;";
+    public static final String NUMBER_OF_REGISTERED_COURSES=" select count(studentId) as cnt from registeredCourse where studentId = ?;";
+    public static final String VIEW_GRADE = "select courseCode,grade from registeredCourse where studentId = ?;";
+    public static final String ADD_PAYMENT ="INSERT INTO payment values ( ? , ? , ?)";
+    public static final String SELECT_PAYMENT_ROW =  "select * from payment where studentId = ?";
+    public static final String VIEW_ENROLLED_COURSES = "SELECT * FROM courseCatalog WHERE courseCode in (select courseCode from registeredCourse where studentid = ?)";
 
 
 
