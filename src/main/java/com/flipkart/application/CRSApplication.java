@@ -1,5 +1,12 @@
-package com.flipkart.application;
+/**
+ *
+ * @author JEDI06 Group4
+ * CRS Application
+ *
+ */
 
+
+package com.flipkart.application;
 import com.flipkart.bean.Admin;
 
 import com.flipkart.bean.Professor;
@@ -11,14 +18,18 @@ import com.flipkart.input.Helper;
 import com.flipkart.validator.Authentication;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
+
+
+
 
 public class CRSApplication {
 
     public static void main(String[] args) {
         mainMenu();
     }
-
+    /**
+     * Method to display main CRSmenu
+     */
     public static void mainMenu() {
 
         Logger logger = Logger.getLogger(CRSApplication.class);
