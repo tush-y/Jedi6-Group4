@@ -15,6 +15,12 @@ import sun.security.util.math.intpoly.P256OrderField;
 
 import java.util.ArrayList;
 
+/**
+ * @author JEDI-06-group-4
+ *Class for Professor Operations
+ *
+ */
+
 public class ProfessorOperation implements ProfessorOperationInterface {
 
     Professor professor;
@@ -22,6 +28,14 @@ public class ProfessorOperation implements ProfessorOperationInterface {
     public ProfessorOperation(Professor professor){
         this.professor = professor;
     }
+
+    /**
+     * Method to Grade a student 
+     * @param: studentId: student id
+     * @param: courseCode: course code for the corresponding
+     * @param grade: grade given to student in that course
+     * @return: void
+     */
     @Override
     public void addGrades(String studentId, String courseCode , int grade) {
 
@@ -29,10 +43,16 @@ public class ProfessorOperation implements ProfessorOperationInterface {
         try {
             operation.addGrades(studentId , courseCode , grade);
         }catch (GradesAlreadyGivenException ex){
-            logger.warn(ex.getMessage());
+            logger.error(ex.getMessage());
         }
     }
 
+    /**
+     * Method to choose course which professor wants to teach 
+     * @param: courseCode: course code for the corresponding
+     * @return: void
+     * @throws CourseAlreadyRegisteredException
+     */
     @Override
     public void chooseCourse(String courseCode) throws CourseAlreadyRegisteredException {
 
@@ -40,6 +60,12 @@ public class ProfessorOperation implements ProfessorOperationInterface {
         operation.chooseCourse(professor.getId() , courseCode);
     }
 
+    /**
+     * Method to view list of enrolled Students 
+     * @param: courseCode: course code of the professor
+     * @return: void
+     * @throws CourseNotTaughtException
+     */
     @Override
     public void viewEnrolledStudent(String courseCode) {
 
@@ -53,10 +79,14 @@ public class ProfessorOperation implements ProfessorOperationInterface {
             logger.trace("============================================================");
         }
         catch (CourseNotTaughtException ex){
-            logger.info(ex.getMessage());
+            logger.error(ex.getMessage());
         }
     }
 
+    /**
+     * Method to get Courses by Professor Id 
+     * @return void
+     */
     @Override
     public void viewCourses() {
 
@@ -68,6 +98,11 @@ public class ProfessorOperation implements ProfessorOperationInterface {
         logger.trace("============================================================");
 
     }
+
+    /**
+     * Method to get all available courses 
+     * @return void
+     */
     public void showAllCourses(){
 
         ArrayList<Course> allCourses = new CatalogDaoOperation().getAllCourses();

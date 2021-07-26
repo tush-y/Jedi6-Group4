@@ -6,7 +6,6 @@ package com.flipkart.dao;
 
 import com.flipkart.bean.StudentGrade;
 import com.flipkart.constant.SQLQueriesConstant;
-import com.flipkart.constant.SQLqueries;
 import com.flipkart.exceptions.RegistrationNotCompleteException;
 import com.flipkart.input.Helper;
 import com.sun.tools.classfile.ConstantPool;
@@ -37,8 +36,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
     public void viewEnrolledCourses(String studentId)
     {
         try{
-            String sql = "SELECT * FROM courseCatalog WHERE courseCode in (select courseCode from registeredCourse where studentid = ?)";
-            stmt = conn.prepareStatement(sql);
+            stmt = conn.prepareStatement(SQLQueriesConstant.VIEW_ENROLLED_COURSES);
             stmt.setString(1 , studentId);
             ResultSet rs = stmt.executeQuery();
 
@@ -82,11 +80,11 @@ public class StudentDaoOperation implements StudentDaoInterface {
             ResultSet rs2 = stmt.executeQuery();
             rs2.next();
             if ((getCountOfRegisterdCourses(studentId) < 6) && (rs1.getInt("cnt") == 0) && (rs2.getInt("seats") > 0)) {
-                stmt = conn.prepareStatement(SQLqueries.ADD_COURSE);
+                stmt = conn.prepareStatement(SQLQueriesConstant.ADD_COURSE);
                 stmt.setString(1, studentId);
                 stmt.setString(2, courseCode);
                 stmt.executeUpdate();
-                stmt = conn.prepareStatement(SQLqueries.DECREASE_SEATS);
+                stmt = conn.prepareStatement(SQLQueriesConstant.DECREASE_SEATS);
                 stmt.setString(1, courseCode);
                 stmt.executeUpdate();
                 logger.info(String.format("%s registered", courseCode));
@@ -105,11 +103,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
         {
             logger.info(e.getMessage());
         }
-//        finally
-//        {
-//            stmt.close();
-//            conn.close();
-//        }
     }
 
     /**
@@ -124,12 +117,12 @@ public class StudentDaoOperation implements StudentDaoInterface {
         try
         {
             if (getCountOfRegisterdCourses(studentId) > 4) {
-                stmt = conn.prepareStatement(SQLqueries.DROP_COURSE_QUERY);
+                stmt = conn.prepareStatement(SQLQueriesConstant.DROP_COURSE_QUERY);
                 stmt.setString(1, courseCode);
                 stmt.setString(2, studentId);
                 stmt.execute();
 
-                stmt = conn.prepareStatement(SQLqueries.INCREASE_SEATS);
+                stmt = conn.prepareStatement(SQLQueriesConstant.INCREASE_SEATS);
                 stmt.setString(1, courseCode);
                 stmt.execute();
             }
@@ -141,11 +134,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
         {
             logger.error(e.getMessage());
         }
-//        finally
-//        {
-//            stmt.close();
-//            conn.close();
-//        }
     }
 
     /**
@@ -160,14 +148,9 @@ public class StudentDaoOperation implements StudentDaoInterface {
         List<StudentGrade> gradeCard = new ArrayList<>();
         try
         {
-            stmt = conn.prepareStatement(SQLqueries.IS_APPROVED);
-            stmt.setString(1, studentId);
-            ResultSet rs = stmt.executeQuery();
-            rs.next();
-            if(rs.getBoolean("isApproved")) {
-                stmt = conn.prepareStatement(SQLqueries.VIEW_GRADE);
+                stmt = conn.prepareStatement(SQLQueriesConstant.VIEW_GRADE);
                 stmt.setString(1, studentId);
-                rs = stmt.executeQuery();
+                ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
                     String courseCode = rs.getString("courseCode");
@@ -175,10 +158,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
                     StudentGrade obj = new StudentGrade(courseCode, grade);
                     gradeCard.add(obj);
                 }
-            }
-            else {
-                logger.warn("******** Grades are not approved by Admin ********");
-            }
         }
         catch(SQLException e)
         {
@@ -188,11 +167,6 @@ public class StudentDaoOperation implements StudentDaoInterface {
         {
             logger.info(e.getMessage());
         }
-//        finally
-//        {
-//            stmt.close();
-//            conn.close();
-//        }
         return gradeCard;
     }
 
@@ -232,7 +206,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
                     default: System.out.println("******** invalid input. Enter Again. ********");
                                 payFees(studentId);
                 }
-                stmt = conn.prepareStatement(SQLqueries.ADD_PAYMENT);
+                stmt = conn.prepareStatement(SQLQueriesConstant.ADD_PAYMENT);
                 stmt.setString(1, studentId);
                 stmt.setInt(2,1);
                 stmt.setString(3,modeP[i-1]);
@@ -277,7 +251,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
         Connection conn = DBConnector.getInstance();
 
         try{
-            PreparedStatement stmt = conn.prepareStatement(SQLqueries.SELECT_PAYMENT_ROW);
+            PreparedStatement stmt = conn.prepareStatement(SQLQueriesConstant.SELECT_PAYMENT_ROW);
             stmt.setString(1, studentId);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
@@ -300,7 +274,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
     private int getCountOfRegisterdCourses(String studentId){
 
         try {
-            stmt = conn.prepareStatement(SQLqueries.NUMBER_OF_REGISTERED_COURSES);
+            stmt = conn.prepareStatement(SQLQueriesConstant.NUMBER_OF_REGISTERED_COURSES);
             stmt.setString(1, studentId);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
