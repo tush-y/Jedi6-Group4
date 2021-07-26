@@ -27,6 +27,10 @@ public class StudentCRSMenu {
     private StudentOperation studentOperation;
     private Student student;
 
+    /**
+     * Parameterized Constructor for StudentCRSMenu
+     * @param student
+     */
     public StudentCRSMenu(Student student){
         this.student = student;
         studentOperation = new StudentOperation(student);
@@ -82,6 +86,12 @@ public class StudentCRSMenu {
         }
         menu();
     }
+    /**
+     * Method to signUp
+     * @param list
+     * throw SQLException
+     *
+     */
 
     public static void signUpMenu(ArrayList<User> list) throws SQLException {
         Student student = new Student();

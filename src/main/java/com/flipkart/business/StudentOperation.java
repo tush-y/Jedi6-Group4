@@ -1,3 +1,7 @@
+/**
+ * @author JEDI6 Group4
+ */
+
 package com.flipkart.business;
 
 import com.flipkart.bean.Professor;
@@ -20,16 +24,26 @@ public class StudentOperation implements StudentOperationInterface {
     Student student;
     private static Logger logger = Logger.getLogger(StudentOperation.class);
 
+    /**
+     * Parameterized Constructor for StudentOperation
+     * @param student
+     */
+
     public StudentOperation(Student student){
         this.student = student;
     }
-
+    /**
+     * Method to view enrolled courses
+     */
     @Override
     public void viewEnrolledCourses() {
         StudentDaoOperation operation=new StudentDaoOperation();
         operation.viewEnrolledCourses(student.getId());
     }
-
+    /**
+     * Method to add course corresponding to student
+     * @param courseCode : Course Code
+     */
     @Override
     public void addCourse(String courseCode) {
         StudentDaoOperation operation=new StudentDaoOperation();
@@ -41,7 +55,9 @@ public class StudentOperation implements StudentOperationInterface {
             logger.warn(ex.getMessage());
         }
     }
-
+    /**
+     * Method to registr courses for students
+     */
     @Override
     public void register() {
 
@@ -58,7 +74,9 @@ public class StudentOperation implements StudentOperationInterface {
         }
         logger.info("Registration for courses successful");
     }
-
+    /**
+     * Method to drop courses for students
+     */
     @Override
     public void dropCourse(String courseCode) {
         StudentDaoOperation operation=new StudentDaoOperation();
@@ -70,6 +88,10 @@ public class StudentOperation implements StudentOperationInterface {
         }
     }
 
+
+    /**
+     * Method to view grade card for students
+     */
     @Override
     public void viewGradeCard() {
         StudentDaoOperation operation=new StudentDaoOperation();
@@ -94,6 +116,10 @@ public class StudentOperation implements StudentOperationInterface {
         }
     }
 
+
+    /**
+     * Method to pay student fees
+     */
     @Override
     public void payFees() {
         StudentDaoOperation operation=new StudentDaoOperation();

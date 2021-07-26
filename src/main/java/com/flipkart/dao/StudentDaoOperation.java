@@ -1,3 +1,7 @@
+
+/**
+ * @author : JEDI6 Group4
+ */
 package com.flipkart.dao;
 
 import com.flipkart.bean.StudentGrade;
@@ -243,6 +247,11 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
         }
     }
+    /**
+     * Method to add course to student
+     * @param studentId : StudentId
+     * @param courseCode : CourseCode
+     */
 
     public void addSingleCourse(String studentId , String courseCode){
 
@@ -259,6 +268,10 @@ public class StudentDaoOperation implements StudentDaoInterface {
         }
     }
 
+    /**
+     * Method to check if the fees has already been paid
+     * @param studentId
+     */
     private boolean checkFeeAlreadyPaid(String studentId){
 
         Connection conn = DBConnector.getInstance();
@@ -279,6 +292,11 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
     }
 
+    /**
+     * Method to get count of Registrered Courses
+     * @param studentId
+     * @return no of registered courses
+     */
     private int getCountOfRegisterdCourses(String studentId){
 
         try {
