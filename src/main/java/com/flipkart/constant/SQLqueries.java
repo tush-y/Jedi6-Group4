@@ -10,5 +10,7 @@ public class SQLqueries {
     public static final String NUMBER_OF_REGISTERED_COURSES=" select count(studentId) as cnt from registeredCourse where studentId = ?;";
     public static final String VIEW_GRADE = "select courseCode,grade from registeredCourse where studentId = ?;";
     public static final String IS_APPROVED=" select isApproved from registeredCourse where studentId=?; ";
+    public static final String ADD_PAYMENT="INSERT INTO payment values ( ? , ? , ?)";
+    public static final String SELECT_PAYMENT_ROW=  "select * from payment where studentId = ?";
 
 }

@@ -37,7 +37,7 @@ public class Authentication {
                 switch (role) {
                     case "Professor":
                         Professor professor = new Professor();
-                        professor.setId(rs.getString("user_id"));
+                        professor.setId(rs.getString("userId"));
                         professor.setDepartment(rs.getString("department"));
                         professor.setName(rs.getString("name"));
                         professor.setRole(Role.PROF);
@@ -45,7 +45,7 @@ public class Authentication {
                         return professor;
                     case "Admin":
                         Admin admin = new Admin();
-                        admin.setId(rs.getString("user_id"));
+                        admin.setId(rs.getString("userId"));
                         admin.setName(rs.getString("name"));
                         admin.setRole(Role.ADMIN);
                         return admin;
@@ -57,7 +57,7 @@ public class Authentication {
                         Student student = new Student();
                         student.setName(rs.getString("name"));
                         student.setBranch(rs.getString("branch"));
-                        student.setId(rs.getString("user_id"));
+                        student.setId(rs.getString("userId"));
                         student.setRole(Role.STUDENT);
                         return student;
                 }
