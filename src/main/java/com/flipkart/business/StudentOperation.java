@@ -83,7 +83,6 @@ public class StudentOperation implements StudentOperationInterface {
 
         if(gradeCard.isEmpty())
         {
-//            logger.info("You haven't registered for any course");
             return;
         }
         logger.info(String.format("%-10s %-10s","COURSE CODE", "GRADE"));
