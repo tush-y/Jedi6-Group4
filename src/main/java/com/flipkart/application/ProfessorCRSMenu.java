@@ -12,6 +12,12 @@ import sun.security.util.math.intpoly.P256OrderField;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ *
+ * @author JEDI-06-group-4
+ * Class that display Professor Client Menu
+ *
+ */
 
 public class ProfessorCRSMenu {
 
@@ -22,6 +28,11 @@ public class ProfessorCRSMenu {
         professorOperation = new ProfessorOperation(professor);
 
     }
+
+    /**
+     * Method to create Professor menu
+     * displays all the options for the professor, and provides navigation
+     */
     public void menu(){
 
         Logger logger = Logger.getLogger(ProfessorCRSMenu.class);
@@ -53,7 +64,7 @@ public class ProfessorCRSMenu {
             try {
                 professorOperation.chooseCourse(courseCode);
             } catch (CourseAlreadyRegisteredException ex){
-                logger.warn(ex.getMessage());
+                logger.error(ex.getMessage());
             }
         }
         else if(value==3){

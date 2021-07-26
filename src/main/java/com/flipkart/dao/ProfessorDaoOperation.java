@@ -15,6 +15,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ *
+ * @author JEDI-06-group-4
+ * Class to implement Professor Dao Operations
+ *
+ */
+
 public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
     private final Connection conn;
@@ -23,6 +30,11 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         conn = DBConnector.getInstance();
     }
 
+    /**
+     * Method to get Courses by Professor Id using SQL Commands
+     * @param profId: prof id of the professor
+     * @return get the courses offered by the professor.
+     */
     @Override
     public ArrayList<Course> getCourseByProf(String profId) {
 
@@ -51,6 +63,13 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         return result;
     }
 
+    /**
+     * Method to view list of enrolled Students using SQL Commands
+     * @param: profId: professor id
+     * @param: courseCode: course code of the professor
+     * @return: return the enrolled students for the corresponding professor and course code.
+     * @throws CourseNotTaughtException
+     */
     @Override
     public ArrayList<ArrayList<String>> getEnrolledStudents(String profId , String courseCode) throws CourseNotTaughtException {
 
@@ -81,6 +100,14 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         return result;
     }
 
+    /**
+     * Method to Grade a student using SQL Commands
+     * @param: studentId: student id
+     * @param: courseCode: course code for the corresponding
+     * @param grade: grade given to student in that course
+     * @return: void
+     * @throws GradesAlreadyGivenException
+     */
     @Override
     public void addGrades(String studentId, String courseCode, int grade) throws GradesAlreadyGivenException {
 
@@ -101,6 +128,13 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         }
     }
 
+    /**
+     * Method to update student grades using SQL Commands
+     * @param: studentId: student id
+     * @param: courseCode: course code for the corresponding
+     * @param grade: updated grade given to student in that course
+     * @return: void
+     */
     @Override
     public void updateGrades(String studentId, String courseCode, String grade) {
         try {
@@ -116,7 +150,13 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         }
     }
 
-
+    /**
+     * Method to choose course which professor wants to teach using SQL Commands
+     * @param: studentId: student id
+     * @param: courseCode: course code for the corresponding
+     * @return: void
+     * @throws CourseAlreadyRegisteredException
+     */
     @Override
     public void chooseCourse(String profId , String courseCode) throws CourseAlreadyRegisteredException {
 
@@ -137,6 +177,12 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         }
     }
 
+    /**
+     * Method to update student grades using SQL Commands
+     * @param: profId: professor id
+     * @param: courseCode: course code for the corresponding
+     * @return: whether instructor is signed up for the course or not
+     */
     private boolean checkIfSignedUp(String profId , String courseCode){
 
         final String sql = "SELECT * from instructor where profId = ? and coursecode = ?";
@@ -156,6 +202,12 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
 
     }
 
+    /**
+     * Method to update student grades using SQL Commands
+     * @param: studentId:  Student id
+     * @param: courseCode: course code for the corresponding
+     * @return: whether grades for the course is already provided or not
+     */
     private boolean checkIfGradesAlreadyGiven(String studentId , String courseCode){
 
         Connection conn = DBConnector.getInstance();
@@ -176,6 +228,12 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
         return false;
     }
 
+    /**
+     * Method to update student grades using SQL Commands
+     * @param: profId:  professor id
+     * @param: courseCode: course code for the corresponding
+     * @return: whether course is taught by the professor or not
+     */
     private boolean checkCourseIsTaught(String profId , String courseCode){
 
         Connection conn = DBConnector.getInstance();
@@ -197,8 +255,6 @@ public class ProfessorDaoOperation implements ProfessorDaoInterface {
     public static void main(String[] args) throws GradesAlreadyGivenException {
 
         ProfessorDaoOperation operation = new ProfessorDaoOperation();
-//        ArrayList<Course>  courses = operation.getCourseByProf("Prof001");
-//        System.out.println(courses);
         operation.addGrades("LIT2017022" , "CS009" , 10);
     }
 }
