@@ -4,11 +4,12 @@
  */
 package com.flipkart.dao;
 
+import com.flipkart.bean.Course;
 import com.flipkart.bean.StudentGrade;
 import com.flipkart.constant.SQLQueriesConstant;
 import com.flipkart.exceptions.RegistrationNotCompleteException;
 import com.flipkart.input.Helper;
-import com.sun.tools.classfile.ConstantPool;
+import com.flipkart.input.TableGenerator;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -16,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StudentDaoOperation implements StudentDaoInterface {
@@ -40,12 +42,15 @@ public class StudentDaoOperation implements StudentDaoInterface {
             stmt.setString(1 , studentId);
             ResultSet rs = stmt.executeQuery();
 
+            List<String> headers = Arrays.asList("Course Code" , "Course Name");
+            List<List<String>> data = new ArrayList<>();
 
             while(rs.next()){
-                String course_name = rs.getString("courseName");
+                String courseName = rs.getString("courseName");
                 String courseId = rs.getString("courseCode");
-                System.out.println(course_name + "          " + courseId);
+                data.add(Arrays.asList(courseId , courseName));
             }
+            logger.info(new TableGenerator().generateTable(headers , data));
 
         }
         catch (SQLException ex){
@@ -242,6 +247,30 @@ public class StudentDaoOperation implements StudentDaoInterface {
         }
     }
 
+    public ArrayList<Course> getAvailableCourses(String studentId){
+
+        Connection conn = DBConnector.getInstance();
+        ArrayList<Course> result = new ArrayList<>();
+        try {
+            PreparedStatement stmt = conn.prepareStatement(SQLQueriesConstant.VIEW_AVAILABLE_COURSES);
+            stmt.setString(1 , studentId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+
+                String code = rs.getString("courseCode");
+                String description = rs.getString("description");
+                String course_name = rs.getString("courseName");
+                Integer seats = rs.getInt("seats");
+
+                Course tmp_course = new Course(code, course_name , seats , description);
+                result.add(tmp_course);
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return result;
+    }
+
     /**
      * Method to check if the fees has already been paid
      * @param studentId
@@ -266,6 +295,7 @@ public class StudentDaoOperation implements StudentDaoInterface {
 
     }
 
+
     /**
      * Method to get count of Registrered Courses
      * @param studentId
@@ -286,4 +316,5 @@ public class StudentDaoOperation implements StudentDaoInterface {
         }
         return 0;
     }
+
 }

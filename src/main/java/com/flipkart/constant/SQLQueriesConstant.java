@@ -41,10 +41,12 @@ public class SQLQueriesConstant {
     public static final String ADD_PAYMENT ="INSERT INTO payment values ( ? , ? , ?)";
     public static final String SELECT_PAYMENT_ROW =  "select * from payment where studentId = ?";
     public static final String VIEW_ENROLLED_COURSES = "SELECT * FROM courseCatalog WHERE courseCode in (select courseCode from registeredCourse where studentid = ?)";
-
+    public static final String VIEW_AVAILABLE_COURSES = "SELECT * FROM courseCatalog WHERE courseCode not in(SELECT courseCode from registeredCourse where studentId = ?)";
 
 
 
     // Admin
     public static final String INSERT_COURSE = "insert into courseCatalog(courseCode, courseName, description, seats) values (?, ?, ?, ?)";
+    public static final String GET_ALL_STUDENTS = "SELECT * FROM users join student on users.userId = student.studentId";
+    public static final String GET_ALL_PROFESSORS = "SELECT * from users join professor on users.userId = professor.profId";
 }

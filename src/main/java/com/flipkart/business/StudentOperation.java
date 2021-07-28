@@ -4,6 +4,7 @@
 
 package com.flipkart.business;
 
+import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
 import com.flipkart.bean.Student;
 import com.flipkart.bean.StudentGrade;
@@ -13,11 +14,13 @@ import com.flipkart.dao.ProfessorDaoOperation;
 import com.flipkart.dao.StudentDaoOperation;
 import com.flipkart.exceptions.RegistrationNotCompleteException;
 import com.flipkart.input.Helper;
+import com.flipkart.input.TableGenerator;
 import org.apache.log4j.Logger;
 import sun.jvm.hotspot.memory.HeapBlock;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StudentOperation implements StudentOperationInterface {
@@ -46,6 +49,8 @@ public class StudentOperation implements StudentOperationInterface {
      */
     @Override
     public void addCourse(String courseCode) {
+        logger.info("Available Courses");
+        viewAvailableCourses();
         StudentDaoOperation operation=new StudentDaoOperation();
         try {
             operation.addCourse(student.getId() , courseCode);
@@ -56,11 +61,12 @@ public class StudentOperation implements StudentOperationInterface {
         }
     }
     /**
-     * Method to registr courses for students
+     * Method to register courses for students
      */
     @Override
     public void register() {
 
+        viewAvailableCourses();
         final int minCourses = 4;
         CatalogDaoOperation operation = new CatalogDaoOperation();
         ArrayList<String> courses = new ArrayList<>();
@@ -79,6 +85,7 @@ public class StudentOperation implements StudentOperationInterface {
      */
     @Override
     public void dropCourse(String courseCode) {
+        viewEnrolledCourses();
         StudentDaoOperation operation=new StudentDaoOperation();
 
         try {
@@ -107,12 +114,13 @@ public class StudentOperation implements StudentOperationInterface {
         {
             return;
         }
-        logger.info(String.format("%-10s %-10s","COURSE CODE", "GRADE"));
-
+        List<String> headers = Arrays.asList("Course Code" , "Grades");
+        List<List<String>> data = new ArrayList<>();
         for(StudentGrade obj : gradeCard)
         {
-            logger.info(String.format("%-10s %-10s",obj.getCourseCode(),obj.getGrade()));
+            data.add(Arrays.asList(obj.getCourseCode() , obj.getGrade()));
         }
+        logger.info(new TableGenerator().generateTable(headers , data));
     }
 
 
@@ -123,5 +131,28 @@ public class StudentOperation implements StudentOperationInterface {
     public void payFees() {
         StudentDaoOperation operation=new StudentDaoOperation();
         operation.payFees(student.getId());
+    }
+
+    public void viewAvailableCourses(){
+
+        StudentDaoOperation operation = new StudentDaoOperation();
+        ArrayList<Course> courses = operation.getAvailableCourses(student.getId());
+        printTable(courses);
+    }
+
+    private void printTable(ArrayList<Course> courses){
+        List<String> headers = Arrays.asList("Course Code" , "Course Name" , "Description" , "Seats");
+        List<List<String>> data = new ArrayList<>();
+        for(Course course : courses){
+
+            List<String> row = Arrays.asList(
+                    course.getCourseCode() ,
+                    course.getCourseName() ,
+                    course.getDescription() ,
+                    Integer.toString(course.getSeats())
+            );
+            data.add(row);
+        }
+        logger.info(new TableGenerator().generateTable(headers , data));
     }
 }

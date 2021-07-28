@@ -9,11 +9,14 @@ import com.flipkart.dao.ProfessorDaoOperation;
 import com.flipkart.exceptions.CourseAlreadyRegisteredException;
 import com.flipkart.exceptions.CourseNotTaughtException;
 import com.flipkart.exceptions.GradesAlreadyGivenException;
+import com.flipkart.input.TableGenerator;
 import com.mysql.cj.log.Log;
 import org.apache.log4j.Logger;
 import sun.security.util.math.intpoly.P256OrderField;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author JEDI-06-group-4
@@ -71,12 +74,10 @@ public class ProfessorOperation implements ProfessorOperationInterface {
 
         ProfessorDaoOperation operation = new ProfessorDaoOperation();
         try {
-            ArrayList<ArrayList<String>> data = operation.getEnrolledStudents(professor.getId() , courseCode);
-            logger.trace("============================================================");
-            for(ArrayList<String> info : data){
-                logger.info(info);
-            }
-            logger.trace("============================================================");
+            ArrayList<ArrayList<String>> students = operation.getEnrolledStudents(professor.getId() , courseCode);
+            List<String> headers = Arrays.asList("Student ID" , "Name" , "Branch");
+            List<List<String>> data = new ArrayList<>(students);
+            logger.info(new TableGenerator().generateTable(headers , data));
         }
         catch (CourseNotTaughtException ex){
             logger.error(ex.getMessage());
@@ -91,12 +92,7 @@ public class ProfessorOperation implements ProfessorOperationInterface {
     public void viewCourses() {
 
         ArrayList<Course> enrolledCourses = new ProfessorDaoOperation().getCourseByProf(professor.getId());
-        logger.trace("============================================================");
-        for(Course course : enrolledCourses){
-            logger.info(course.toString());
-        }
-        logger.trace("============================================================");
-
+        printTable(enrolledCourses);
     }
 
     /**
@@ -106,10 +102,22 @@ public class ProfessorOperation implements ProfessorOperationInterface {
     public void showAllCourses(){
 
         ArrayList<Course> allCourses = new CatalogDaoOperation().getAllCourses();
-        logger.trace("============================================================");
-        for(Course course : allCourses){
-            logger.info(course.toString());
+        printTable(allCourses);
+    }
+
+    private void printTable(ArrayList<Course> courses){
+        List<String> headers = Arrays.asList("Course Code" , "Course Name" , "Description" , "Seats");
+        List<List<String>> data = new ArrayList<>();
+        for(Course course : courses){
+
+            List<String> row = Arrays.asList(
+                    course.getCourseCode() ,
+                    course.getCourseName() ,
+                    course.getDescription() ,
+                    Integer.toString(course.getSeats())
+            );
+            data.add(row);
         }
-        logger.trace("============================================================");
+        logger.info(new TableGenerator().generateTable(headers , data));
     }
 }

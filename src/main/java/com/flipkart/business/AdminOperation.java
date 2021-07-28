@@ -2,8 +2,13 @@ package com.flipkart.business;
 
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
+import com.flipkart.bean.Student;
 import com.flipkart.dao.AdminDaoOperation;
 import com.flipkart.exceptions.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AdminOperation implements AdminOperationInterface {
 
@@ -43,6 +48,17 @@ public class AdminOperation implements AdminOperationInterface {
         } catch (ProfessorNotAddedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void viewStudents(){
+
+        AdminDaoOperation operation = new AdminDaoOperation();
+        ArrayList<Student> students = operation.getAllStudents();
+        List<String> headers = Arrays.asList("Student Id");
+    }
+
+    public void viewProfessors(){
+
     }
 }
 

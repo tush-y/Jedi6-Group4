@@ -1,9 +1,14 @@
 package com.flipkart.dao;
 import java.sql.*;
+import java.util.ArrayList;
+
 import com.flipkart.bean.Course;
 import com.flipkart.bean.Professor;
+import com.flipkart.bean.Student;
+import com.flipkart.constant.Role;
 import com.flipkart.constant.SQLQueriesConstant;
 import com.flipkart.exceptions.*;
+import oracle.ucp.proxy.annotation.Pre;
 
 /**
  * @author JEDI-06
@@ -138,5 +143,52 @@ public class AdminDaoOperation implements AdminDaoInterface {
         {
             ex.printStackTrace();
         }
+    }
+
+    public ArrayList<Student> getAllStudents(){
+
+        Connection conn = DBConnector.getInstance();
+        ArrayList<Student> students = new ArrayList<>();
+        try{
+            PreparedStatement stmt = conn.prepareStatement(SQLQueriesConstant.GET_ALL_STUDENTS);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                Student student = new Student();
+                student.setName(rs.getString("name"));
+                student.setId(rs.getString("userId"));
+                student.setRole(Role.STUDENT);
+                student.setBranch("branch");
+                students.add(student);
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return students;
+    }
+
+    public ArrayList<Professor> getAllProfessors(){
+
+        Connection conn = DBConnector.getInstance();
+        ArrayList<Professor> professors = new ArrayList<>();
+
+        try{
+            PreparedStatement stmt = conn.prepareStatement(SQLQueriesConstant.GET_ALL_PROFESSORS);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+
+                Professor professor = new Professor();
+                professor.setName(rs.getString("name"));
+                professor.setDepartment(rs.getString("department"));
+                professor.setDesignation(rs.getString("designation"));
+                professor.setRole(Role.PROF);
+                professor.setId(rs.getString("userId"));
+                professors.add(professor);
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return professors;
     }
 }

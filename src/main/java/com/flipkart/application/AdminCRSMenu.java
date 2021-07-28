@@ -10,12 +10,25 @@ import com.flipkart.bean.Professor;
 import com.flipkart.bean.Student;
 import com.flipkart.constant.*;
 import com.flipkart.input.Helper;
+import org.apache.log4j.Logger;
+
 import java.util.*;
 
 public class AdminCRSMenu {
 
+    private static final Logger logger = Logger.getLogger(AdminCRSMenu.class);
     public static void menu(){
-        ArrayList<String> list = new ArrayList<>(Arrays.asList("Add Course" , "Remove Course" , "Add Professor" , "Approve Student"));
+        ArrayList<String> list = new ArrayList<>(
+                Arrays.asList(
+                "Add Course" ,
+                "Remove Course" ,
+                "Add Professor" ,
+                "Approve Student" ,
+                "View Students",
+                "View Professors",
+                "Log out"
+                )
+        );
 
         int count = 1;
         for(String value : list){
@@ -25,8 +38,8 @@ public class AdminCRSMenu {
 
         Integer value = Helper.scanInt();
 
-        if(value==null || value > 4){
-            System.out.println("Invalid Option");
+        if(value==null || value > 7){
+            logger.warn("Invalid Option");
             menu();
         }
         else if(value == 1){
@@ -71,6 +84,16 @@ public class AdminCRSMenu {
             String student_id=Helper.scanString("the student Id");
             AdminOperation operation=new AdminOperation();
             operation.approveStudent(student_id);
+        }
+        else if(value==5){
+
+            // View Students should be called .
+        }
+        else if(value==6){
+            // View Professor should be called .
+        }
+        else if(value==7){
+            return;
         }
 
         menu();

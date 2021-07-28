@@ -62,10 +62,12 @@ public class StudentCRSMenu {
             studentOperation.viewEnrolledCourses();
         }
         else if(value==2){
+            studentOperation.viewAvailableCourses();
             String  courseCode = Helper.scanString("courseCode");
             studentOperation.addCourse(courseCode);
         }
         else if(value==3){
+            studentOperation.viewEnrolledCourses();
             String  courseCode = Helper.scanString("courseCode");
             studentOperation.dropCourse(courseCode);
         }
